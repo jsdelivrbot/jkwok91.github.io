@@ -1,0 +1,8 @@
+.fancy-text {
+    color: #ffafaf;
+    font-style: italic;
+}
+
+button:active {
+    background-color: #ff0000;
+}
