@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Adventure Game</title>
+  </head>
+  <body>
+    <section id="intro">
+      <p>introduction</p>
+      <a href="#start">start!</a>
+    </section>
+    <section id="start">
+      <p>It's 2AM. The streets are shiny after fresh rainfall, and the smell of garbage is starting to lift. You're on the corner of 2nd St and Avenue A, and you've got to meet your friend in midtown by 5:30AM to wait in line for Shakespeare in the Park tickets.</p>
+      <p>It'll take you 15 minutes to bike up there, so you've got time. You've also got a hankering for tacos, maybe because there's a taco truck in plain sight across the street. You</p>
+      <ul>
+        <li><a href="#tacoTruck1">cross the street to get to the taco truck.</a></li>
+        <li><a href="#goNorthNoTaco1">ignore the craving and start moving northward.</a></li>
+      </ul>
+    </section>
+    <section id="tacoTruck1">
+      <p>Taco taco taco</p>
+      <p>You</p>
+      <ul>
+        <li><a href="#tacoTruck2">MORE TACOS.</a></li>
+        <li><a href="#goNorthTaco">start moving northward.</a></li>
+      </ul>
+    </section>
+    <section id="tacoTruck2">
+      <p>more tacos!!!</p>
+      <ul>
+        <li><a href="#tacoTruck3">EVEN MORE TACOS.</a></li>
+        <li><a href="#goNorthTaco">start moving northward.</a></li>
+      </ul>
+    </section>
+    <section id="tacoTruck3">
+      <p>no more tacos.</p>
+      <ul>
+        <li><a href="#goNorthTaco">start moving northward.</a></li>
+      </ul>
+    </section>
+    <section id="goNorthTaco">
+      <p>After you're done w tacos, you move northward.</p>
+      <p>THE END YOU'RE AWESOME YAY</p>
+      <ul>
+        <li><a href="#intro">Start over!</a></li>
+      </ul>
+    </section>
+    <section id="goNorthNoTaco1">
+      <p>no tacos for you :(</p>
+      <p>you are so sad</p>
+      <p>THE END</p>
+      <ul>
+        <li><a href="#intro">Start over!</a></li>
+      </ul>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('section').hide();
+            var current = $('#intro');
+            current.show();
+            $('a').on('click',function(e){
+              e.preventDefault();
+              var sect = $(this).attr('href');
+              current.hide();
+              current = $(sect);
+              current.show();
+            })
+        })
+    </script>
+  </body>
+</html>

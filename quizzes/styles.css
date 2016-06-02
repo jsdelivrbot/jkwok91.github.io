@@ -1,0 +1,7 @@
+.question {
+    font-weight: bold;
+}
+.choices {
+    padding-left: 15px;
+    cursor: pointer;
+}

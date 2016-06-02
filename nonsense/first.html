@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My first 3js app</title>
+  </head>
+  <body>
+    <script src="lib/three.js"></script>
+    <script src="lib/Projector.js"></script>
+    <script src="lib/CanvasRenderer.js"></script>
+    <script>
+        // sup
+        // every three.js project needs:
+        // a scene
+        var scene;
+        // a camera
+        var camera;
+        // a renderer
+        var renderer;
+        
+        // apparently we need a raycaster for mouse interaction/intersections
+        var raycaster;
+        
+        var cubes;
+        var howManyCubes;
+        
+        init();
+        
+        function init() {
+          scene = new THREE.Scene();
+          camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        
+          // docs say the constructor takes args of (fov, aspect, near, far)
+          // still not rly understanding what fov is; gonna change the values around in a bit
+        
+          renderer = new THREE.CanvasRenderer();
+          renderer.setClearColor( 0xf0f0f0 );
+          renderer.setSize(window.innerWidth, window.innerHeight); // what IS a renderer?
+          document.body.appendChild(renderer.domElement); // this puts the renderer into the HTML, by placing its dom element into the body
+        
+          // now we put in the stuff
+        
+          cubes = [];
+          howManyCubes = 5; //Math.ceil(Math.random());
+        
+          var geometry = new THREE.BoxGeometry(4,2,4); // is this the size of the box
+          for (var i = 0; i < howManyCubes; i++) {
+            var cube = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff, opacity: 0.5}));
+            cube.position.set(i,2*i,0);
+            cubes[i] = cube;
+            scene.add(cube);
+          }
+        
+          camera.position.set(0,0,10);
+        
+          raycaster = new THREE.Raycaster();
+          mouse = new THREE.Vector2();
+        
+          document.addEventListener( 'mousedown', onDocumentMouseDown, false);
+          document.addEventListener( 'touchstart', onDocumentTouchStart, false);
+        }
+        
+        function onDocumentTouchStart(e) {
+          e.preventDefault();
+          e.clientX = e.touches[0].clientX;
+          e.clientY = e.touches[0].clientY;
+          onDocumentMouseDown(e);
+        }
+        
+        function onDocumentMouseDown(e) {
+          e.preventDefault();
+        
+          mouse.x = (e.clientX / renderer.domElement.clientWidth) * 2 - 1;
+          mouse.y = - (e.clientY / renderer.domElement.clientHeight) * 2 + 1;
+        
+          raycaster.setFromCamera(mouse, camera);
+        
+          var intersects = raycaster.intersectObjects(scene.children);
+        
+          if (intersects.length > 0) {
+            var intersected = intersects[0].object;
+            intersected.material.color.setHex(Math.random() * 0xffffff);
+            if (intersected.scale.x < 1) {
+              intersected.scale.set(1,1,1);
+            } else {
+              intersected.scale.set(0.5,0.5,0.5);
+            }
+          }
+        }
+        
+        // now we render
+        
+        function render() {
+          requestAnimationFrame(render);
+          for (var i = 0; i < howManyCubes; i++) {
+            var cube = cubes[i];
+            //cube.rotation.x += 0.01*i;
+            cube.rotation.y += 0.01*(i+1);
+          }
+          camera.rotation.z += 0.01;
+          renderer.render(scene,camera);
+        }
+        render();
+    </script>
+  </body>
+</html>

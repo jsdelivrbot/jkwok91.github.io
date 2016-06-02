@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Shadows maybe</title>
+  </head>
+  <body>
+    <script src="lib/three.js"></script>
+    <script src="lib/Projector.js"></script>
+    <script>
+        // june 2 2016
+        
+        // im gonna follow a tutorial on how to do lights cuz i don't understand it myself
+        /*
+        from this tutorial:
+        Casting shadows in three.js involves 3 parts: the renderer which does the computation, the lights which cast shadows, and objects which receives lights and shadows.
+        */
+        
+        // set up:
+        var scene, camera, renderer;
+        
+        var light;
+        var obj1;
+        var obj2;
+        
+        var angle;
+        
+        init();
+        animate();
+        
+        function init() {
+          angle = 0;
+        
+          scene = new THREE.Scene();
+          camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
+        
+          /*
+          Well. This confirms the conclusion i came to yesterday which took very long to come to. gr8
+          Shadow casting is quite expensive. It is only supported by WebGLRenderer. It uses Shadow mapping, a technique specific to WebGL, performed directly on the GPU.
+          */
+          renderer = new THREE.WebGLRenderer();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.shadowMap.enabled = true;
+          renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+          document.body.appendChild(renderer.domElement);
+        
+          /*
+          More things I had to find out the hard way yesterday:
+          Make sure the light source you want to cast shadows is either a DirectionalLight or a SpotLight. A PointLight can’t cast shadows.
+          */
+          light = new THREE.SpotLight(0xffffff, 1); // wow i do not know how to use DirectionalLight
+          light.position.set(50, 50, -20);
+          light.castShadow = true;
+          scene.add(light);
+        
+          var lightHelper = new THREE.SpotLightHelper( light );
+          //scene.add(lightHelper);
+        
+          var geometry = new THREE.BoxGeometry(10, 10, 10);
+          obj1 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0xff0000}));
+          obj2 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0xffff00}));
+          obj1.position.set(-10, 5, 0);
+          obj2.position.set(10, 5, 0);
+          obj1.castShadow = true;
+          obj2.castShadow = true;
+          obj1.receiveShadow = true;
+          obj2.receiveShadow = true;
+        
+          scene.add(obj1);
+          scene.add(obj2);
+        }
+        
+        function animate() {
+          requestAnimationFrame(animate);
+          render();
+        }
+        
+        function render() {
+          angle = (angle + 0.05) % 360;
+          camera.rotation.y = 180 - angle;
+          camera.position.x = -50*Math.cos(angle);
+          camera.position.z = -50*Math.sin(angle);
+          renderer.render(scene, camera);
+        }
+    </script>
+  </body>
+</html>

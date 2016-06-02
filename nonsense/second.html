@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My second 3js app: a game</title>
+  </head>
+  <body>
+    <script src="lib/three.js"></script>
+    <script src="lib/Projector.js"></script>
+    <script src="lib/CanvasRenderer.js"></script>
+    <script>
+        // let's see if i remember how to set shit up
+        var winning;
+        
+        var scene, camera, renderer;
+        var raycaster;
+        var group;
+        var cameraRotation;
+        
+        init();
+        animate();
+        
+        function init() {
+          winning = document.createElement("div");
+          winning.setAttribute("id","winning");
+          winning.innerHTML = "";
+          document.body.appendChild(winning);
+        
+          scene = new THREE.Scene();
+          camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 1, 1000);
+          renderer = new THREE.CanvasRenderer();
+          renderer.setClearColor(0xf0f0f0);
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          document.body.appendChild(renderer.domElement);
+        
+          raycaster = new THREE.Raycaster();
+          mouse = new THREE.Vector2();
+        
+          // create objects and such
+          group = new THREE.Group();
+          scene.add(group);
+          var geometry = new THREE.BoxGeometry(2,2,1);
+        
+          for (var i = 0; i < 36; i++) {
+            var material = new THREE.MeshBasicMaterial({color: Math.random()*0xffffff, opacity: 0.5});
+            var box = new THREE.Mesh(geometry, material);
+            box.position.x = 30*Math.cos(i * 10);
+            box.position.z = 30*Math.sin(i * 10);
+            group.add(box);
+          }
+        
+          // rendering stuff
+          cameraRotation = 0.01;
+          //camera.position.z = 50;
+        
+          // interaction
+          document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+        }
+        
+        // animate calls render
+        // requestAnimationFrame() takes a parameter that is the function that should be the next frame (to create smooth animation)
+        
+        function animate() {
+          requestAnimationFrame(animate);
+          render();
+        
+          if (group.children.length < 1) {
+            cameraRotation = 0; // kill animation
+            winning.innerHTML = "YOU WON";
+          }
+        }
+        
+        function render() {
+          camera.rotation.y += cameraRotation;
+          group.children.map(function(b) {
+            b.rotation.x += 0.05;
+            b.rotation.z += 0.05;
+          });
+          renderer.render(scene, camera); // tell the renderer to actually do
+        }
+        
+        function onDocumentMouseDown(e) {
+          e.preventDefault();
+        
+          // aight im turning this into a really idiotic game where you gotta click all the boxes. ok i need the raycaster for this
+        
+          mouse.x = (e.clientX / renderer.domElement.clientWidth) * 2 - 1;
+          mouse.y = - (e.clientY / renderer.domElement.clientHeight) * 2 + 1;
+        
+          // this is v important
+          raycaster.setFromCamera(mouse, camera);
+        
+          var intersects = raycaster.intersectObjects(group.children);
+          if (intersects.length > 0) {
+            var intersected = intersects[0].object;
+            intersected.visible = false;
+            group.remove(intersected);
+          }
+        }
+    </script>
+  </body>
+</html>

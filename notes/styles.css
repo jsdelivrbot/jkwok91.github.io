@@ -1,0 +1,15 @@
+.new-note > * {
+    display: block;
+}
+.post-new-note {
+}
+.note-head * {
+    display: inline;
+    margin-right: 15px;
+}
+.note-title {
+    font-weight: bold;
+}
+.note-date {
+    font-style: italic;
+}
