@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Light</title>
+  </head>
+  <body>
+    <script src="lib/three.js"></script>
+    <script src="lib/CanvasRenderer.js"></script>
+    <script src="lib/Projector.js"></script>
+    <script type="text/javascript">
+        // june 14, 2016
+        // not sure what the plan is today yet.
+        // also i just got back from a week+ of not programming so let's see if i remmeber anything
+        
+        var loader;
+        var scene, camera, renderer, raycaster, mouse;
+        
+        var cubes;
+        var geometry, material;
+        var initCubes, theta, rotationInc;
+        var score;
+        
+        init();
+        animate();
+        
+        function init() {
+          loader = new THREE.JSONLoader();
+        
+          cubes = new THREE.Group();
+          geometry = new THREE.BoxGeometry(5,5,5);
+          material = new THREE.MeshBasicMaterial({color: 0xaaaaaa, opacity: 0.5});
+          initCubes = 5;
+          theta = 0;
+          rotationInc = 0.025;
+          score = 0;
+        
+          scene = new THREE.Scene();
+          // yo where is the center of the camera. why is it slightly to the left in my screen
+          camera = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 1, 1000);
+          renderer = new THREE.CanvasRenderer();
+          // what happens if you don't set the clear color? --> black (0,0,0);
+          renderer.setClearColor( 0xf0f0f0 );
+          // what happens if you don't set the size of renderer? --> width 300 height 150
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          document.body.appendChild(renderer.domElement);
+        
+          raycaster = new THREE.Raycaster();
+          mouse = new THREE.Vector2();
+        
+          scene.add(cubes);
+          // make special cube
+          loader.load("lib/apple.js", function (g) {
+            datOne = new THREE.Mesh(g, new THREE.MeshBasicMaterial({color: 0xff0000}));
+            datOne.position.set(Math.random()*50-25, Math.random()*50-25, Math.random()*20-50);
+            scene.add(datOne);
+            createCubes();
+          });
+        
+        
+          document.addEventListener('mousedown', registerClick, false);
+        }
+        
+        function createCubes() {
+          cubes.children = [];
+          for (var i = 0; i < initCubes; i++) {
+            var cube = new THREE.Mesh(geometry, material);
+            // i need an algorithm to space things nicely
+            cube.position.set(Math.random()*50-25, Math.random()*50-25, Math.random()*50-25);
+            cubes.add(cube);
+          }
+        }
+        
+        function registerClick(e) {
+          mouse.x = (e.clientX / renderer.domElement.clientWidth) * 2 - 1;
+          mouse.y = - (e.clientY / renderer.domElement.clientHeight) * 2 + 1;
+        
+          raycaster.setFromCamera(mouse, camera);
+        
+          var intersects = raycaster.intersectObjects(scene.children);
+        
+          if (intersects.length > 0 && intersects[0].object == datOne) {
+            score++;
+            // increase rotation or whatever difficulty thing
+            rotationInc += 0.001;
+            initCubes++;
+            createCubes();
+            datOne.position.set(Math.random()*50-25, Math.random()*50-25, Math.random()*50-25);
+          }
+        }
+        
+        function animate() {
+          requestAnimationFrame(animate);
+          render();
+        }
+        
+        function render() {
+          theta = (theta + rotationInc) % 360;
+          rotateCamera();
+          renderer.render(scene, camera);
+        }
+        
+        function rotateCamera() {
+          camera.position.set(-50*Math.cos(theta), 0, -50*Math.sin(theta));
+          camera.rotation.y = 180 - theta;
+        }
+    </script>
+  </body>
+</html>
