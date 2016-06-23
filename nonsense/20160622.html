@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Light</title>
+  </head>
+  <body>
+    <script src="lib/three.js"></script>
+    <script src="lib/CanvasRenderer.js"></script>
+    <script src="lib/Projector.js"></script>
+    <script type="text/javascript">
+        // weekend is over
+        // starfield time
+        // june 22 2016
+        
+        var scene, camera, renderer;
+        
+        var starGeo, starMat;
+        var starField;
+        
+        init();
+        animate();
+        
+        function init() {
+          scene = new THREE.Scene();
+          camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
+          renderer = new THREE.CanvasRenderer();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setClearColor(0x000000);
+          document.body.appendChild(renderer.domElement);
+        
+          starGeo = new THREE.BoxGeometry(1,1,1);
+          starMat = new THREE.MeshBasicMaterial({color: 0xffffff});
+        
+          starField = new THREE.Group();
+          scene.add(starField);
+          generateStars();
+        }
+        
+        function generateStars() {
+          for (var i = 0; i < 100; i++) {
+            generateStar();
+          }
+        }
+        
+        function generateStar() {
+          var star = new THREE.Mesh(starGeo, starMat);
+          var randPos = setStarPos(Math.random()*-100);
+          star.position.set(randPos.x,randPos.y,randPos.z);
+          starField.add(star);
+        }
+        
+        function setStarPos(z) {
+          return new THREE.Vector3(Math.random()*window.innerWidth-(window.innerWidth/2), Math.random()*window.innerHeight-(window.innerHeight/2), z);
+        }
+        
+        function animate() {
+          requestAnimationFrame(animate);
+          render();
+        }
+        
+        function render() {
+          var s = 0;
+          while (s < starField.children.length) {
+            var star = starField.children[s];
+            star.position.z += Math.random()*5;
+            if (star.position.z > 0) {
+              var randPos = setStarPos(-100);
+              star.position.set(randPos.x,randPos.y,randPos.z);
+            }
+            s++;
+          }
+          renderer.render(scene, camera);
+        }
+    </script>
+  </body>
+</html>
