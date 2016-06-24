@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+    <head>
+        <title>II</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+        <script>
+            var numCols;
+            var colWidth;
+            
+            function setup() {
+              createCanvas(500, 500);
+              background(255);
+              numCols = 10;
+              colWidth = width/numCols;
+            }
+            
+            function draw() {
+              background(255);
+              var whichColumnIsMouseIn = Math.floor(mouseX/colWidth);
+              for (var i = 0; i < numCols; i++) {
+                // do some absolute value shit
+                // holy fuck i just blew my own mind with absolute value
+                var colOpacity = Math.abs(whichColumnIsMouseIn-i);
+                fill(255, 0, 0, 255-colOpacity*20);
+                rect(i*colWidth, 0, colWidth, height);
+              }
+            }
+        </script>
+    </body>
+</html>
