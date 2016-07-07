@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>testing</title>
+  </head>
+  <body>
+    <p>Interactions: Left and Right Arrow Keys, Mouse Click</p>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    <script>
+        var BUFFER = 20;
+        var diag, big_rad, small_rad, spacing;
+        var big_angle, big_inc, small_angle, small_inc;
+        var automated;
+        
+        function setup() {
+          automated = false;
+          createCanvas(500,500);
+          background(0);
+          noStroke();
+          fill(255);
+          diag = Math.sqrt(Math.pow(width-(2*BUFFER), 2) + Math.pow(height-(2*BUFFER), 2));
+          big_rad = diag/(15.5);
+          small_rad = big_rad*0.75;
+          big_angle = 0;
+          small_angle = 0;
+          small_inc = 0.05;
+          big_inc = small_inc*0.75;
+          spacing = Math.sqrt(2)*(big_rad + small_rad);
+          console.log(diag, big_rad, small_rad, spacing);
+        }
+        
+        function draw() {
+          background(0);
+          var circRad, startX;
+          var y = BUFFER/2 + small_rad;
+          var altRow = false;
+          while (y < height-BUFFER) {
+            if (altRow) {
+              circRad = big_rad;
+              startX = small_rad + circRad + (spacing - (2*big_rad))/2; // wow only took me a hundred years to figure that out
+              startAngle = big_angle;
+            } else {
+              circRad = small_rad;
+              startX = circRad;
+              startAngle = small_angle;
+            }
+            var x = BUFFER/2 + startX;
+            while (x <= width-BUFFER) {
+              arc(x, y, 2*circRad, 2*circRad, startAngle, startAngle+PI);
+              x += spacing;
+            }
+            y += spacing/2;
+            altRow = !altRow;
+          }
+          
+          if (automated) {
+              automate();
+          }
+        }
+        
+        function mousePressed() {
+            automated = !automated;
+        }
+        
+        function automate() {
+          big_angle -= big_inc;
+          small_angle += small_inc;
+        }
+        
+        function keyPressed() {
+          if (keyCode == RIGHT_ARROW) {
+            big_angle -= big_inc;
+            small_angle += small_inc;
+          }
+          else if (keyCode == LEFT_ARROW) {
+            big_angle += big_inc;
+            small_angle -= small_inc;
+          }
+        }
+
+    </script>
+  </body>
+</html>
