@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+        <title>what the fk ever</title>
+    </head>
+    <body>
+        <button id="btn-1">click me</button>
+        <script type="text/javascript">
+            var btn1 = document.getElementById("btn-1");
+            btn1.onclick = function() {
+                var p = document.createElement('p');
+                p.innerHTML = "button wuz clicked";
+                document.body.appendChild(p);
+                console.log(p.innerHTML);
+                var btn2 = document.createElement('button');
+                btn2.innerHTML = "click me also!";
+                document.body.appendChild(btn2).setAttribute("id","btn-2");
+                btn2.onclick = function() {
+                  var p = document.createElement('p');
+                  p.innerHTML = "second button wuz clicked lol dont u love nested nested fns";
+                  document.body.appendChild(p);
+                  console.log(p.innerHTML);
+                }
+            }
+        </script>
+    </body>
+</html>
