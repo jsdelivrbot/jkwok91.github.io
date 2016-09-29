@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+    <head>
+        <title>circles rotating</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            var ro, theta, phi;
+            
+            function setup() {
+              createCanvas(500,500);
+              background(0);
+              stroke(255);
+              noFill();
+              ro = 0;
+              theta = 0;
+              phi = 0;
+            }
+            
+            function draw() {
+              background(0);
+              //soloSpin();
+              //spinAroundCenter();
+              manyCircles();
+            }
+            
+            // step 1: make a solo circle spin along the y axis (vertical) in the middle of the page
+            function soloSpin() {
+              var cx = width/2;
+              var cy = height/2;
+              ellipse(cx, cy, 50*cos(ro), 50);
+              ro += 0.01;
+            }
+            
+            // kool that took like 3 mins lol
+            // still got it bitches. still got it.
+            // BITCHES
+            
+            // step 2: rotate that shit about a point that is not the center
+            
+            function spinAroundCenter() {
+              var cx = width/2;
+              var cy = height/2;
+              var rad = 100;
+              ellipse(cx+rad*sin(theta), cy, 50*cos(theta), 50);
+              theta += 0.01;
+            }
+            
+            // fuck yeah im a fuckin wizard
+            // bitch
+            // simple fuckin math yo. simple fuckin math
+            
+            // step 3: concentric fuckin circles yo
+            
+            function manyCircles() {
+              var cx = width/2;
+              var cy = height/2;
+              var rad = 200; // maximum horizontal movement /2
+              var numCircles = 8;
+              for (var i = -numCircles+1; i < numCircles; i++) {
+                //if (i == 0) { stroke("red"); } else { stroke("white"); }
+                var circleRad = 2*rad*sin(acos(1.05*i/numCircles));
+                // yo i do not understand why this 1.05 constant made things look slightly better but ey im not here to do trigonometry ok
+                var spacing = i*(rad/numCircles);
+                ellipse(cx+(spacing)*sin(phi), cy, circleRad*cos(phi), circleRad);
+              }
+              phi += 0.025;
+            }
+            
+            // ok the roll stopped lmao i can't think thru this cuz i'm a moron and i've created garbage
+            // ok that took me way too long but i'm done
+            
+            // some fine tuning andddd i'm out.
+
+        </script>
+    </body>
+</html>
