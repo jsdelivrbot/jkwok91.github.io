@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <head>
+        <title>bad ripples 1</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // oct 2 2016
+            // imma fix this ripples thing
+            var smaller, larger;
+            
+            function setup() {
+              createCanvas(500,500);
+              background(0);
+              stroke(255);
+              noFill();
+              angleMode(DEGREES);
+              noLoop();
+            
+              smaller = 30;
+              larger = smaller*Math.sqrt(3);
+            }
+            
+            function draw() {
+              var x = width/2;
+              var y = height/2;
+              ellipse(x, y, smaller*2, smaller*2);
+              arcs(x, y);
+            }
+            
+            function arcs(x, y) {
+              // im gonna have each of the six points arc clockwise(or whatever way) simultaneously
+              for (var i = 0; i < 6; i++) {
+                animateArcs(x, y, i, larger*2);
+                setTimeout(function(j) {
+                  animateArcs(x, y, j, smaller*2);
+                }, 2400, i);
+              }
+            }
+            
+            function animateArcs(x, y, i, rad) {
+              var theta = i*60;
+              var x_ = x+(2*smaller*cos(theta));
+              var y_ = y+(2*smaller*sin(theta));
+              var st = theta + 150;
+              var ee = st + 60;
+            
+              var p1 = st;
+              var p2 = st+5;
+              var aa = setInterval(function() {
+                if (p2 >= st+360) {
+                  clearInterval(aa);
+                }
+                arc(x_, y_, rad, rad, p1, p2);
+                p1 = p2;
+                p2 += 5;
+              }, 50);
+            }
+        </script>
+    </body>
+</html>
