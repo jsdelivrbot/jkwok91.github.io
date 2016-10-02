@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+    <head>
+        <title>bad ripples 1</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // october 1 2016
+            // from a thing i faved on tumblr a while back
+            var smaller, larger;
+            var drawing;
+            var circles;
+            var memoization;
+            
+            function setup() {
+              createCanvas(500, 500);
+              background(0);
+              stroke(255);
+              noFill();
+              angleMode(DEGREES);
+              circles = [];
+              smaller = 30;
+              larger = smaller*Math.sqrt(3);
+              circles.push([width/2, height/2]);
+              memoization = {}; // i'm lazy ok
+              memoization[width/2] = [str(height/2)];
+            }
+            
+            function draw() {
+              ripple();
+            }
+            
+            function concentricCirc(cx, cy) {
+              // draw two concentric circles around cx and cy
+              ellipse(cx, cy, smaller*2, smaller*2);
+              setTimeout(function() {
+                ellipse(cx, cy, larger*2, larger*2);
+              }, 100);
+            }
+            
+            function drawCirc(x, y) {
+              concentricCirc(x, y);
+              for (var i = 0; i < 6; i++) {
+                var endAngle = i*60;
+                var new_x = Math.round(x+(2*smaller*cos(endAngle)), -2);
+                var new_y = Math.round(y-(2*smaller*sin(endAngle)), -2);
+                var str_x = str(new_x);
+                var str_y = str(new_y);
+                var withinBounds = (new_x >= -1*smaller)
+                  && (new_x <= smaller+width)
+                  && (new_y >= -1*smaller)
+                  && (new_y <= smaller+height);
+                if (withinBounds) {
+                  if (!memoization[str_x]) {
+                    memoization[str_x] = [];
+                  }
+                  if (memoization[str_x].indexOf(str_y) == -1) {
+                    circles.push([new_x, new_y]);
+                    memoization[str_x].push(str_y);
+                  }
+                }
+              }
+              var stopDrawing = setTimeout(function() {
+                drawing = false;
+              }, 200);
+            }
+            
+            function ripple() {
+              if (circles.length > 0) {
+                if (!drawing) {
+                  drawing = true;
+                  var [x, y] = circles.shift();
+                  drawCirc(x, y);
+                }
+              }
+            }
+        </script>
+    </body>
+</html>
