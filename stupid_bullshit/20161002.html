@@ -8,10 +8,12 @@
         <script type="text/javascript">
             // oct 2 2016
             // imma fix this ripples thing
+            
             var smaller, larger;
+            var memoization;
             
             function setup() {
-              createCanvas(500,500);
+              createCanvas(500, 500);
               background(0);
               stroke(255);
               noFill();
@@ -20,39 +22,72 @@
             
               smaller = 30;
               larger = smaller*Math.sqrt(3);
+              memoization = {};
             }
             
-            function draw() {
+            function init() {
               var x = width/2;
               var y = height/2;
-              ellipse(x, y, smaller*2, smaller*2);
+              memoization[str(x)] = [str(y)];
               arcs(x, y);
             }
             
-            function arcs(x, y) {
-              // im gonna have each of the six points arc clockwise(or whatever way) simultaneously
-              for (var i = 0; i < 6; i++) {
-                animateArcs(x, y, i, larger*2);
-                setTimeout(function(j) {
-                  animateArcs(x, y, j, smaller*2);
-                }, 2400, i);
+            function draw() {
+              init();
+            }
+            
+            // the arcs fn should:
+            // - draw small circle
+            // - draw large circle
+            // - map center points
+            // recurse with center points?!
+            function arcs(x, y, st) {
+              var st = st || 0;
+              // bounds
+              var withinBounds = (x >= -1*larger)
+                && (x <= width+larger)
+                && (y >= -1*larger)
+                && (y <= height+larger);
+              if (!withinBounds) { return; }
+              else {
+                animateCirc(x, y, smaller*2, st);
+                setTimeout(function() {
+                  animateCirc(x, y, larger*2, st);
+                }, 2400,i);
+                for (var i = 0; i < 6; i++) {
+                  // check if it's in the memoization
+                  // fuck do i have to calculate this twice. balls.
+                  setTimeout(function(j) {
+                    var theta = j*60;
+                    var x_ = x+(2*smaller*cos(theta));
+                    var y_ = y+(2*smaller*sin(theta));
+                    var st = theta + 150;
+                    var str_x = str(Math.round(x_,-2));
+                    var str_y = str(Math.round(y_,-2));
+            
+                    // can i put this here
+                    if (!memoization[str_x]) {
+                      memoization[str_x] = [];
+                    }
+                    // if not, put it in the memoization and execute this:
+                    if (memoization[str_x].indexOf(str_y) === -1) {
+                      memoization[str_x].push(str_y);
+                      arcs(x_, y_, st);
+                    }
+                  }, 2400, i); //yeah this is why you need memoization
+            
+                }
               }
             }
             
-            function animateArcs(x, y, i, rad) {
-              var theta = i*60;
-              var x_ = x+(2*smaller*cos(theta));
-              var y_ = y+(2*smaller*sin(theta));
-              var st = theta + 150;
-              var ee = st + 60;
-            
+            function animateCirc(x, y, dia, st) {
               var p1 = st;
-              var p2 = st+5;
+              var p2 = p1+5;
               var aa = setInterval(function() {
                 if (p2 >= st+360) {
                   clearInterval(aa);
                 }
-                arc(x_, y_, rad, rad, p1, p2);
+                arc(x, y, dia, dia, p1, p2);
                 p1 = p2;
                 p2 += 5;
               }, 50);
