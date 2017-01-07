@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <title>my first p5 sketch</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+  </head>
+  <body>
+    <script>
+        // ulam spiral leggo
+        
+        var start;
+        var N, n;
+        var sideLen;
+        var looping;
+        
+        function setup() {
+          createCanvas(500,500);
+          background(0);
+          looping = true;
+          sideLen = 20;
+          N = 401;
+          n = 2;
+          rectMode(CENTER);
+          start = createVector(width/2, height/2);
+        }
+        
+        function draw() {
+          background(0);
+          if (n > N) { n = 2; }
+        
+          var loopsAround = 0;
+          // how the fuck do i draw a spiral
+          // this was a programming question that i once failed
+          // this is taking me absurdly long
+        
+          drawSq(start.x, start.y, 1);
+        
+          for (var i = 2; i < n; i++) {
+            var nextLargestSq = Math.ceil(Math.sqrt(i));
+            var spiralSide = nextLargestSq%2 == 0 ? nextLargestSq+1 : nextLargestSq;
+            var tier = Math.floor(spiralSide/2); // integer diviz?
+            var numPerSide = spiralSide-1;
+            var prevSpiralSide = 2*tier - 1;
+            var thisTierStart = Math.pow(prevSpiralSide, 2) + 1;
+            // these names are horrible. i am truly sorry.
+            var sideIdx = ((i - thisTierStart)%numPerSide) + 1;
+            var relSideIdx = sideIdx - tier;
+            var side = Math.floor((i - thisTierStart)/numPerSide)+1;
+        
+            var dx, dy;
+            if (side == 1) {
+              dx = tier;
+              dy = -1*relSideIdx;
+            } else if (side == 2) {
+              dx = -1*relSideIdx;
+              dy = -1*tier;
+            } else if (side == 3) {
+              dx = -1*tier;
+              dy = relSideIdx;
+            } else {
+              dx = relSideIdx;
+              dy = tier;
+            }
+        
+            var coorx = start.x + dx * sideLen;
+            var coory = start.y + dy * sideLen;
+        
+            drawSq(coorx, coory, i);
+          }
+          n++;
+        }
+        
+        function drawSq(x, y, num) {
+          // check properties of num and color accordingly
+        
+          var rectColor = color(0,0,0);
+          if (isPrime(num)) {
+            rectColor = color(200,200,0);
+          }
+        
+          fill(rectColor);
+          stroke(255);
+          rect(x, y, sideLen, sideLen);
+        
+          fill(255);
+          noStroke();
+          textSize(10);
+          textAlign(CENTER, CENTER);
+          var num = "" + num;
+          text(num, x, y);
+        }
+        
+        function isPrime(num) { // #elegance LMFAO. man.
+          if (num == 1) { return false; }
+          for (var i = 2; i <= Math.sqrt(num); i++) {
+            if (num%i == 0) {
+              return false;
+            }
+          }
+          return true;
+        }
+        
+        function mouseClicked() {
+          if (looping) {
+            noLoop();
+          } else {
+            loop();
+          }
+          looping = !looping;
+        }
+
+    </script>
+  </body>
+</html>
