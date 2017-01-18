@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <title>test</title>
+    <style type="text/css">
+      * {
+        margin: 1px;
+      }
+      canvas {
+      }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+  </head>
+  <body>
+    <script>
+      // p5 site
+      
+      var screen;
+      var w, h; // how big is screensize
+      var side;
+      var rows, cols, totalCells;
+      
+      var projects = [
+        {
+          link: "http://jkwok91.github.io/stupid_bullshit/20170106.html"
+        },
+        {
+          link: "http://jkwok91.github.io/stupid_bullshit/20160928_1905.html"
+        },
+        {
+          link: "http://jessicakwok.com/processing/myProcessing.html"
+        }
+      ];
+      var numProj;
+      var randomCells;
+      
+      function setup() {
+        side = 20;
+        cols = Math.floor(window.innerWidth/side);
+        rows = Math.floor(window.innerHeight/side);
+        w = cols*side;
+        h = rows*side;
+        screen = createCanvas(w+1, h+1); // edges of rectangles yo (soooo jank)
+        screen.mouseOver(toPoint);
+        screen.mouseClicked(toLink);
+      
+        numProj = projects.length;
+        
+        totalCells = cols*rows;
+        randomCells = [];
+        noLoop();
+      }
+      
+      function draw() {
+        randomCells = [];
+        for (var p = 0; p < numProj; p++) {
+          var cellNum = getRandom(totalCells);
+          while (randomCells.indexOf(cellNum) != -1) {
+            cellNum = getRandom(totalCells);
+          }
+          randomCells.push(cellNum);
+        }
+        //console.log(randomCells);
+        for (var y = 0; y < rows; y++) {
+          for (var x = 0; x < cols; x++) {
+            var proj;
+            var xcor = x*side;
+            var ycor = y*side;
+            var i = y*cols + x;
+            if (randomCells.indexOf(i) != -1) {
+              var c = color(random(255),random(255),random(255));
+              fill(c);
+            } else {
+              fill(200);
+            }
+            rect(xcor, ycor, side, side);
+          }
+        }
+      }
+      
+      window.onresize = function() {
+        side = 20;
+        cols = Math.floor(window.innerWidth/side);
+        rows = Math.floor(window.innerHeight/side);
+        w = cols*side;
+        h = rows*side;
+        screen.size(w, h);
+        totalCells = cols*rows;
+        draw();
+      }
+      
+      function toLink() {
+        var x = winMouseX;
+        var y = winMouseY;
+      
+        if (intersect(x, y)) {
+          window.location = intersect(x, y);
+        }
+      }
+      
+      // this is broken
+      function toPoint() {
+        var x = winMouseX;
+        var y = winMouseY;
+        if (!!intersect(x, y)) {
+          this.style.cursor = pointer;
+        }
+      }
+      // ugh forever
+      
+      function intersect(x,y) {
+        for (var i = 0; i < randomCells.length; i++) {
+          var c = randomCells[i];
+          var cx = c%cols == 0 ? cols : c%cols; // once again i face this mod problem
+          var cy = Math.floor(c/cols);
+          if ((x >= cx*side && x <= (cx+1)*side) && (y >= cy*side && y <= (cy+1)*side)) {
+            var link = projects[i].link;
+            return link;
+          }
+        }
+        return false; //wwwwowww
+      }
+      
+      function getRandom(n) {
+        return Math.ceil(Math.random() * n);
+      }
+
+    </script>
+  </body>
+</html>
