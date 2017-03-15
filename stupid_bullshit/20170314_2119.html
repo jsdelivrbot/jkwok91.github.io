@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>test</title>
+    <style type="text/css">
+      * {
+        margin: 1px;
+      }
+      canvas {
+      }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+  </head>
+  <body>
+      <script type="text/javascript">
+          var d, r, t1, t2;
+          var phi;
+          function setup() {
+              createCanvas(500, 500);
+              background(100);
+              angleMode(DEGREES);
+              noFill();
+              d = 200;
+              r = d/2;
+              t1 = 0;
+              t2 = 0;
+              phi = 0;
+          }
+          
+          function draw() {
+              background(100);
+              ellipse(width/2, height/2, d, d);
+              
+              drawSwoop();
+          }
+          
+          function drawSwoop() {
+              drawAlongCircle(t2);
+              t2 = 45*sin(phi) - 45; // bam
+              phi += 1;
+          }
+          
+          function drawBasic() {
+              drawAlongCircle(t1);
+              t1 += 10;
+          }
+          
+          function drawAlongCircle(t) {
+              ellipse(r*cos(t)+width/2, r*sin(t)+height/2, 10, 10);
+          }
+      </script>
+  </body>
+</html>
