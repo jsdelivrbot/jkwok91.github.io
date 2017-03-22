@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+  <head>
+    <title>test</title>
+    <style type="text/css">
+      * {
+        margin: 1px;
+      }
+      canvas {
+      }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+  </head>
+  <body>
+      <script type="text/javascript">
+          var player, gazeLen;
+          var NPCs, hSpacing, vSpacing;
+          
+          function initialize() {
+            gazeLen = 50;
+            vSpacing = 20;
+            hSpacing = 30;
+            player = {
+              x: width/2,
+              y: height/2 + vSpacing,
+              theta: 90
+            };
+            
+            NPCs = [
+              {
+                x: width/2 - hSpacing,
+                y: height/2 + vSpacing,
+                color: color(0, 250, 175)
+              },
+              {
+                x: width/2 + hSpacing,
+                y: height/2 + vSpacing,
+                color: color(25, 150, 250)
+              },
+              {
+                x: width/2 - hSpacing,
+                y: height/2 - vSpacing,
+                color: color(0, 200, 0)
+              },
+              {
+                x: width/2 + hSpacing,
+                y: height/2 - vSpacing,
+                color: color(0, 100, 250)
+              },
+              {
+                x: width/2,
+                y: height/2 - vSpacing,
+                color: color(50, 200, 125)
+              }
+            ];
+            
+            initNPCs();
+          };
+          
+          function initNPCs() {
+            NPCs = NPCs.map(function(n) {
+              n.downfacing = n.y < height/2;
+              n.theta = random(80,100);
+              n.dir = random() > 0.5 ? -1 : 1;
+              n.seed = random(0,100);
+              return n;
+            })
+          }
+          
+          function setup() {
+            createCanvas(500, 500);
+            angleMode(DEGREES);
+            background(200);
+            initialize();
+          }
+          
+          function draw() {
+            background(200);
+            drawNPCs();
+            drawPlayer();
+            moveNPCs(); // alternatively this could be turn based so that they only move when u move
+          }
+          
+          function drawPlayer() {
+            stroke("red");
+            ellipse(player.x, player.y, 20, 20);
+            line(player.x,
+                 player.y,
+                 player.x + gazeLen * cos(player.theta),
+                 player.y - gazeLen * sin(player.theta)
+                 );
+          }
+          
+          function drawNPCs() {
+            for (var i = 0; i < NPCs.length; i++) {
+              var npc = NPCs[i];
+              stroke(npc.color);
+              ellipse(npc.x, npc.y, 20, 20);
+              if (npc.downfacing) {
+                x2 = npc.x - gazeLen * cos(npc.theta);
+                y2 = npc.y + gazeLen * sin(npc.theta);
+              } else {
+                x2 = npc.x + gazeLen * cos(npc.theta);
+                y2 = npc.y - gazeLen * sin(npc.theta);
+              }
+              line(npc.x, npc.y, x2, y2);
+            }
+          }
+          
+          function moveNPCs() {
+            for (var i = 0; i < NPCs.length; i++) {
+              var npc = NPCs[i];
+              var noize = noise(npc.seed) - 0.5;
+              var delta = noize*3*npc.dir;
+              
+              if ((delta > 0 && npc.theta > 180 - delta) ||
+                  (delta < 0 && npc.theta < abs(delta))) {
+                npc.dir *= -1;
+                delta = noize*3*npc.dir;
+              }
+              npc.theta += delta;
+              
+              npc.seed += 0.01;
+            }
+          }
+          
+          function keyPressed() {
+            if (keyCode === LEFT_ARROW) {
+              turnPlayerLeft();
+            }
+            else if (keyCode === RIGHT_ARROW) {
+              turnPlayerRight();
+            }
+          }
+          
+          function turnPlayerLeft() {
+            if (player.theta < 180) {
+              player.theta += 2;
+            }
+          }
+          
+          function turnPlayerRight() {
+            if (player.theta > 0) {
+              player.theta -= 2;
+            }
+          }
+      </script>
+  </body>
+</html>
