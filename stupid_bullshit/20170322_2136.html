@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <title>test</title>
+    <style type="text/css">
+      * {
+        margin: 1px;
+      }
+      canvas {
+      }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+  </head>
+  <body>
+      <script type="text/javascript">
+        var p;
+        var eyeSweep = 20;
+        
+        function setup() {
+          createCanvas(500, 500);
+          background(200);
+          angleMode(DEGREES);
+          initPlayers();
+        }
+        
+        function initPlayers() {
+          p = {
+            x: 20,
+            y: height/2,
+            angle: 0
+          };
+          
+          light = {
+            x: width - 20,
+            y: height/2,
+            angle: 180,
+            go: false,
+            d: 1
+          }
+        }
+        
+        function draw() {
+          background(200);
+          drawLight();
+          drawPlayer();
+          if (light.angle < 0 || light.angle > 360) {
+            var dir = light.angle < 90 ? 1 : -1;
+            light.d = random(0,2)*dir;
+          }
+          //text("d"+light.d,width/2, height/2);
+        }
+        
+        function drawLight() {
+          fill(200, 0, 0);
+          ellipse(light.x, light.y, 20, 20);
+          if (!light.go) {
+            drawLightSweep();
+            moveLight();
+          }
+        }
+        
+        function drawLightSweep() {
+          var start = light.angle-30;
+          var stop = light.angle+30;
+          arc(light.x, light.y, width*2.5, width*2.5, start, stop);
+        }
+        
+        function moveLight() {
+          light.angle += light.d;
+          // murder!!!!
+          // ok how do i find out if the player was moving
+          // while the sweep was passing over it
+          // hmmm
+          if (keyPressed && sweepContains(p.x, p.y)) {
+            //setInterval(function() {
+              stroke("black");
+              fill("black");
+              text("LOSE", width/2, height/3);
+            //}, 100);
+          }
+        }
+        
+        function sweepContains(x, y) {
+          // uh
+          // check if x is btwn the line drawn by...
+          // uh
+          // uh
+          // geometry ouch
+          // k it's time to brush my teeth and sleep
+          return true;
+        }
+        
+        function drawSweep(x1, y1, angle, buffer, sweep) {
+          line(x1, y1, x1 + sweep*cos(angle-buffer), y1 + sweep*sin(angle-buffer));
+          line(x1, y1, x1 + sweep*cos(angle+buffer), y1 + sweep*sin(angle+buffer));
+        }
+        
+        function drawPlayer() {
+          stroke(0);
+          noFill();
+          ellipse(p.x, p.y, 20, 20);
+          drawSweep(p.x, p.y, p.angle, 20, eyeSweep);
+        }
+        
+        function keyPressed() {
+          if (keyCode === LEFT_ARROW) {
+            p.angle -= 2;
+          }
+          if (keyCode === RIGHT_ARROW) {
+            p.angle += 2;
+          }
+          if (keyCode === UP_ARROW) {
+            // go forward in the direction u r facing
+            p.x += cos(p.angle);
+            p.y += sin(p.angle);
+          }
+          if (keyCode === DOWN_ARROW) {
+            p.x -= cos(p.angle);
+            p.y -= sin(p.angle);
+          }
+        }
+      </script>
+  </body>
+</html>
