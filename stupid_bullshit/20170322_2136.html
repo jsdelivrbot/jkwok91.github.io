@@ -16,12 +16,18 @@
       <script type="text/javascript">
         var p;
         var eyeSweep = 20;
+        var seconds;
         
         function setup() {
           createCanvas(500, 500);
           background(200);
           angleMode(DEGREES);
+          restart();
+        }
+        
+        function restart() {
           initPlayers();
+          seconds = 0;
         }
         
         function initPlayers() {
@@ -36,7 +42,8 @@
             y: height/2,
             angle: 180,
             go: false,
-            d: 1
+            d: 1,
+            sweepWidth: 30 //actually half the sweep width
           }
         }
         
@@ -44,11 +51,17 @@
           background(200);
           drawLight();
           drawPlayer();
-          if (light.angle < 0 || light.angle > 360) {
+          if (light.angle < 90-light.sweepWidth || light.angle > 270+light.sweepWidth) {
             var dir = light.angle < 90 ? 1 : -1;
             light.d = random(0,2)*dir;
           }
           //text("d"+light.d,width/2, height/2);
+          displayTime();
+          seconds += 1/60;
+        }
+        
+        function displayTime() {
+          text("Time elapsed: " + seconds.toFixed(3), width/2, 30);
         }
         
         function drawLight() {
@@ -61,34 +74,40 @@
         }
         
         function drawLightSweep() {
-          var start = light.angle-30;
-          var stop = light.angle+30;
-          arc(light.x, light.y, width*2.5, width*2.5, start, stop);
+          var start = light.angle-light.sweepWidth;
+          var stop = light.angle+light.sweepWidth;
+          arc(light.x, light.y, width*2.5, width*2.5, start, stop); 
+        }
+        
+        function test_showSlope() {
+          stroke("yellow");
+          line(light.x, light.y, light.x + width*cos(light.angle), light.y + width*sin(light.angle));
+          var slope = tan(light.angle);
+          text("slope: "+ slope, width/2, height/2);
         }
         
         function moveLight() {
           light.angle += light.d;
-          // murder!!!!
-          // ok how do i find out if the player was moving
-          // while the sweep was passing over it
-          // hmmm
-          if (keyPressed && sweepContains(p.x, p.y)) {
-            //setInterval(function() {
-              stroke("black");
-              fill("black");
-              text("LOSE", width/2, height/3);
-            //}, 100);
+          if (keyIsPressed && sweepContains(p.x, p.y)) {
+            stroke("black");
+            fill("black");
+            text("LOSE", width/2, height/3);
+            // end the game
           }
         }
         
         function sweepContains(x, y) {
-          // uh
-          // check if x is btwn the line drawn by...
-          // uh
-          // uh
-          // geometry ouch
-          // k it's time to brush my teeth and sleep
-          return true;
+          // jank trix
+          var slope_left = tan(light.angle + light.sweepWidth);
+          var slope_right = tan(light.angle - light.sweepWidth);
+          var slope_p = (light.y - p.y)/(light.x - p.x);
+          if (slope_left > slope_p && slope_right < slope_p) {
+            // dead
+            text("dead", 0, height/2);
+            return true;
+          }
+          return false;
+          // will return the condition itself once i think about what i actually want to do
         }
         
         function drawSweep(x1, y1, angle, buffer, sweep) {
@@ -104,6 +123,7 @@
         }
         
         function keyPressed() {
+          // unintuitive controlz~~~~!!!~!~!~!
           if (keyCode === LEFT_ARROW) {
             p.angle -= 2;
           }
