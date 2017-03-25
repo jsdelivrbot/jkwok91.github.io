@@ -17,17 +17,20 @@
         var p;
         var eyeSweep = 20;
         var seconds;
+        var gameOver, loseKey;
         
         function setup() {
           createCanvas(500, 500);
           background(200);
           angleMode(DEGREES);
+          textAlign(CENTER);
           restart();
         }
         
         function restart() {
           initPlayers();
           seconds = 0;
+          gameOver = false;
         }
         
         function initPlayers() {
@@ -48,6 +51,21 @@
         }
         
         function draw() {
+          if (gameOver) {
+            drawGameOver();
+          } else {
+            drawGame();
+          }
+        }
+        
+        function drawGameOver() {
+          noLoop();
+          text("you were caught moving!!!", width/2, 2*height/5);
+          text("you were pressing the " + loseKey + " key", width/2, 3*height/7);
+          text("click to restart", width/2, height/2);
+        }
+        
+        function drawGame() {
           background(200);
           drawLight();
           drawPlayer();
@@ -55,13 +73,12 @@
             var dir = light.angle < 90 ? 1 : -1;
             light.d = random(0,2)*dir;
           }
-          //text("d"+light.d,width/2, height/2);
           displayTime();
           seconds += 1/60;
         }
         
         function displayTime() {
-          text("Time elapsed: " + seconds.toFixed(3), width/2, 30);
+          text("Time elapsed: " + seconds.toFixed(3) + " seconds", width/2, 30);
         }
         
         function drawLight() {
@@ -89,10 +106,8 @@
         function moveLight() {
           light.angle += light.d;
           if (keyIsPressed && sweepContains(p.x, p.y)) {
-            stroke("black");
-            fill("black");
-            text("LOSE", width/2, height/3);
             // end the game
+            gameOver = true;
           }
         }
         
@@ -101,41 +116,43 @@
           var slope_left = tan(light.angle + light.sweepWidth);
           var slope_right = tan(light.angle - light.sweepWidth);
           var slope_p = (light.y - p.y)/(light.x - p.x);
-          if (slope_left > slope_p && slope_right < slope_p) {
-            // dead
-            text("dead", 0, height/2);
-            return true;
-          }
-          return false;
-          // will return the condition itself once i think about what i actually want to do
-        }
-        
-        function drawSweep(x1, y1, angle, buffer, sweep) {
-          line(x1, y1, x1 + sweep*cos(angle-buffer), y1 + sweep*sin(angle-buffer));
-          line(x1, y1, x1 + sweep*cos(angle+buffer), y1 + sweep*sin(angle+buffer));
+          return (slope_left > slope_p && slope_right < slope_p);
         }
         
         function drawPlayer() {
-          stroke(0);
-          noFill();
+          fill("black");
           ellipse(p.x, p.y, 20, 20);
-          drawSweep(p.x, p.y, p.angle, 20, eyeSweep);
+          stroke(0);
+          line(p.x, p.y, p.x + 20*cos(p.angle), p.y + 20*sin(p.angle));
+          noStroke();
+        }
+        
+        function mouseClicked() {
+          if (gameOver) {
+            restart();
+            loop();
+          }
         }
         
         function keyPressed() {
           // unintuitive controlz~~~~!!!~!~!~!
           if (keyCode === LEFT_ARROW) {
+            loseKey = "left arrow"; //idfk how else to record this
             p.angle -= 2;
+            
           }
           if (keyCode === RIGHT_ARROW) {
+            loseKey = "right arrow";
             p.angle += 2;
           }
           if (keyCode === UP_ARROW) {
+            loseKey = "up arrow";
             // go forward in the direction u r facing
             p.x += cos(p.angle);
             p.y += sin(p.angle);
           }
           if (keyCode === DOWN_ARROW) {
+            loseKey = "down arrow";
             p.x -= cos(p.angle);
             p.y -= sin(p.angle);
           }
