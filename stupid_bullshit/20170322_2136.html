@@ -17,13 +17,14 @@
         var p;
         var eyeSweep = 20;
         var seconds;
-        var gameOver, loseKey;
+        var hasStarted, gameOver, loseKey, hasWon;
         
         function setup() {
           createCanvas(500, 500);
           background(200);
           angleMode(DEGREES);
           textAlign(CENTER);
+          hasStarted = false;
           restart();
         }
         
@@ -31,6 +32,7 @@
           initPlayers();
           seconds = 0;
           gameOver = false;
+          hasWon = false;
         }
         
         function initPlayers() {
@@ -51,17 +53,50 @@
         }
         
         function draw() {
-          if (gameOver) {
+          if (!hasStarted) {
+            drawStartScreen();
+          }
+          else if (gameOver) {
             drawGameOver();
-          } else {
+          }
+          else {
             drawGame();
           }
+          displayTime();
+        }
+        
+        function startGame() {
+          hasStarted = true;
+        }
+        
+        function printWinText() {
+          // you won! and it only took u n seconds!
+          text("you won! and it took " + seconds.toFixed(3) + " seconds.", width/2, 3*height/7);
+        }
+        
+        function printLoseText() {
+          text("you were caught moving!!!", width/2, 2*height/5);
+          text("you were pressing the " + loseKey + " key", width/2, 3*height/7);
+        }
+        
+        function drawStartScreen() {
+          background(0);
+          fill(255);
+          text("welcome to red-light green-light!", width/2, height/3);
+          text("your goal is to touch the red circle as quickly as possible!", width/2, 2*height/5);
+          text("however you must avoid moving while in the red sweeping area", width/2, 3*height/7);
+          text("left and right arrow keys to turn, up and down to move fwd and backwards", width/2, 5*height/11);
+          text("click to start!", width/2, height/2);
         }
         
         function drawGameOver() {
           noLoop();
-          text("you were caught moving!!!", width/2, 2*height/5);
-          text("you were pressing the " + loseKey + " key", width/2, 3*height/7);
+          fill(0);
+          if (hasWon) {
+            printWinText();
+          } else {
+            printLoseText();
+          }
           text("click to restart", width/2, height/2);
         }
         
@@ -73,8 +108,11 @@
             var dir = light.angle < 90 ? 1 : -1;
             light.d = random(0,2)*dir;
           }
-          displayTime();
           seconds += 1/60;
+          if (dist(p.x, p.y, light.x, light.y) <= (10 + 10)) { // these magic numz are the radii of player and light
+            hasWon = true;
+            gameOver = true;
+          }
         }
         
         function displayTime() {
@@ -128,7 +166,10 @@
         }
         
         function mouseClicked() {
-          if (gameOver) {
+          if (!hasStarted) {
+            startGame();
+          } 
+          else if (gameOver) {
             restart();
             loop();
           }
@@ -148,8 +189,8 @@
           if (keyCode === UP_ARROW) {
             loseKey = "up arrow";
             // go forward in the direction u r facing
-            p.x += cos(p.angle);
-            p.y += sin(p.angle);
+            p.x += 10*cos(p.angle);
+            p.y += 10*sin(p.angle);
           }
           if (keyCode === DOWN_ARROW) {
             loseKey = "down arrow";
