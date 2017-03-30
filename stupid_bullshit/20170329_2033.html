@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>test</title>
+    <style type="text/css">
+        * {
+            margin: 1px;
+        }
+        
+        canvas {}
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+</head>
+
+<body>
+    <script type="text/javascript">
+    var points = [
+  {x: 30, y: 30},
+  {x: 40, y: 30},
+  {x: 30, y: 60},
+  {x: 40, y: 60}
+];
+
+var theta;
+
+function setup() {
+  createCanvas(500, 500);
+  background(0);
+  theta = 0;
+}
+
+function draw() {
+  background(0);
+  stroke("red");
+  joinPoints(points);
+  shiftPoints(points);
+  theta += 0.1;
+}
+
+function joinPoints(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var p1 = arr[i];
+    var p2 = arr[(i+1)%arr.length];
+    line(p1.x, p1.y, p2.x, p2.y);
+  }
+}
+
+function shiftPoints(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var p = arr[i];
+    p.x += i*cos(theta);
+    p.y -= i*sin(theta);
+  }
+}
+
+    </script>
+</body>
+
+</html>
