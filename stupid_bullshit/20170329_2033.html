@@ -16,45 +16,72 @@
 
 <body>
     <script type="text/javascript">
-    var points = [
-  {x: 30, y: 30},
-  {x: 40, y: 30},
-  {x: 30, y: 60},
-  {x: 40, y: 60}
-];
+        var p;
+        var dir, theta;
+        var ypos;
 
-var theta;
+        function setup() {
+            createCanvas(600, 400);
+            background(200); // a light gray
+            angleMode(DEGREES);
 
-function setup() {
-  createCanvas(500, 500);
-  background(0);
-  theta = 0;
-}
+            p = new Polygon([{
+                x: -40,
+                y: -40
+            }, {
+                x: 40,
+                y: -40
+            }, {
+                x: 40,
+                y: 40
+            }, {
+                x: -40,
+                y: 40
+            }]);
 
-function draw() {
-  background(0);
-  stroke("red");
-  joinPoints(points);
-  shiftPoints(points);
-  theta += 0.1;
-}
+            dir = 1;
+            theta = 0;
+            ypos = 0;
+        }
 
-function joinPoints(arr) {
-  for (var i = 0; i < arr.length; i++) {
-    var p1 = arr[i];
-    var p2 = arr[(i+1)%arr.length];
-    line(p1.x, p1.y, p2.x, p2.y);
-  }
-}
+        function draw() {
+            if (ypos >= height) {
+                ypos = 0;
+                background(200);
+            }
+            stroke("red");
+            p.turn();
+            p.draw();
+            updateTheta();
+            ypos += 10;
 
-function shiftPoints(arr) {
-  for (var i = 0; i < arr.length; i++) {
-    var p = arr[i];
-    p.x += i*cos(theta);
-    p.y -= i*sin(theta);
-  }
-}
+        }
 
+        function updateTheta() {
+            if (theta > 180 || theta < 0) {
+                dir *= -1;
+            }
+            theta += dir * 5;
+        }
+
+        function Polygon(ptsArr) {
+            this.pts = ptsArr;
+
+            this.draw = function() {
+                var total = this.pts.length;
+                for (var i = 0; i < total; i++) {
+                    var p1 = this.pts[i];
+                    var p2 = this.pts[(i + 1) % total];
+                    line(p1.x, p1.y, p2.x, p2.y);
+                }
+            }
+
+            this.turn = function() {
+                translate(width / 2, 0);
+                translate(0, ypos);
+                rotate(theta);
+            }
+        }
     </script>
 </body>
 
