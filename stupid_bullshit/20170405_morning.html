@@ -2,102 +2,101 @@
 <html>
 
 <head>
-    <title>boop</title>
-    <style type="text/css">
-        * {
-            margin: 1px;
-        }
-        
-        canvas {}
-    </style>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+  <title>boop</title>
+  <style type="text/css">
+    * {
+      margin: 1px;
+    }
+    
+    canvas {}
+  </style>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/addons/p5.dom.js"></script>
 </head>
 
 <body>
-    <script type="text/javascript">
-        var polygons = [];
-var unitSlider, unit;
+  <script type="text/javascript">
+    var polygons = [];
+    var unitSlider, unit;
 
-function setup() {
-  createCanvas(500, 500);
-  unitSlider = createSlider(10, 100, 50);
-  unit = 0; // better to init?
-}
-
-function draw() {
-  background(0);
-  if (unitSlider.value() != unit) {
-    createPolys();
-  }
-  polygons.map(function(p) {
-    p.show();
-  });
-}
-
-function createPolys() {
-  unit = unitSlider.value();
-  var c1, c2, c3;
-  c1 = color(200, 30, 250);
-  c2 = color(200, 230, 50);
-  c3 = color(20, 230, 250);
-  var purple = color(200, 30, 200);
-
-  var alt = false;
-  for (var j = 0; j < height + unit/2; j += unit) {
-    for (var i = 0; i < width + unit/2; i += 2*unit) {
-      var x = i;
-      if (alt) {
-        x -= unit;
-      }
-      var p = new Polygon(c1);
-      p.addVertex(x, j);
-      p.addVertex(x + unit, j - unit/2);
-      p.addVertex(x + unit*2, j);
-      p.addVertex(x + unit, j + unit/2);
-      polygons.push(p);
-      var pL = new Polygon(c2);
-      pL.addVertex(x, j);
-      pL.addVertex(x + unit, j + unit/2);
-      pL.addVertex(x + unit, j + unit);
-      pL.addVertex(x, j + unit/2);
-      polygons.push(pL);
-      var pR = new Polygon(c3);
-      pR.addVertex(x + unit, j + unit/2);
-      pR.addVertex(x + unit*2, j);
-      pR.addVertex(x + unit*2, j + unit/2);
-      pR.addVertex(x + unit, j + unit);
-      polygons.push(pR);
+    function setup() {
+      createCanvas(500, 500);
+      unitSlider = createSlider(10, 100, 50);
+      unit = 0; // better to init?
     }
-    alt = !alt;
-  }
-}
 
-function Polygon(c) {
-  this.vertices = [];
-  this.color = c;
+    function draw() {
+      background(0);
+      if (unitSlider.value() != unit) {
+        createPolys();
+      }
+      polygons.map(function(p) {
+        p.show();
+      });
+    }
 
-  this.addVertex = function(x, y) {
-    this.vertices.push(createVector(x, y));
-  };
+    function createPolys() {
+      unit = unitSlider.value();
+      var c1, c2, c3;
+      c1 = color(200, 30, 250);
+      c2 = color(200, 230, 50);
+      c3 = color(20, 230, 250);
+      var purple = color(200, 30, 200);
 
-  this.show = function() {
-    fill(this.color);
-    stroke(255);
-    quad(
-      this.vertices[0].x,
-      this.vertices[0].y,
-      this.vertices[1].x,
-      this.vertices[1].y,
-      this.vertices[2].x,
-      this.vertices[2].y,
-      this.vertices[3].x,
-      this.vertices[3].y
-    );
-  };
-}
+      var alt = false;
+      for (var j = 0; j < height + unit / 2; j += unit) {
+        for (var i = 0; i < width + unit / 2; i += 2 * unit) {
+          var x = i;
+          if (alt) {
+            x -= unit;
+          }
+          var p = new Polygon(c1);
+          p.addVertex(x, j);
+          p.addVertex(x + unit, j - unit / 2);
+          p.addVertex(x + unit * 2, j);
+          p.addVertex(x + unit, j + unit / 2);
+          polygons.push(p);
+          var pL = new Polygon(c2);
+          pL.addVertex(x, j);
+          pL.addVertex(x + unit, j + unit / 2);
+          pL.addVertex(x + unit, j + unit);
+          pL.addVertex(x, j + unit / 2);
+          polygons.push(pL);
+          var pR = new Polygon(c3);
+          pR.addVertex(x + unit, j + unit / 2);
+          pR.addVertex(x + unit * 2, j);
+          pR.addVertex(x + unit * 2, j + unit / 2);
+          pR.addVertex(x + unit, j + unit);
+          polygons.push(pR);
+        }
+        alt = !alt;
+      }
+    }
 
-    </script>
+    function Polygon(c) {
+      this.vertices = [];
+      this.color = c;
+
+      this.addVertex = function(x, y) {
+        this.vertices.push(createVector(x, y));
+      };
+
+      this.show = function() {
+        fill(this.color);
+        stroke(255);
+        quad(
+          this.vertices[0].x,
+          this.vertices[0].y,
+          this.vertices[1].x,
+          this.vertices[1].y,
+          this.vertices[2].x,
+          this.vertices[2].y,
+          this.vertices[3].x,
+          this.vertices[3].y
+        );
+      };
+    }
+  </script>
 </body>
 
 </html>

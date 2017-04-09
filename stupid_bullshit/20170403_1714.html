@@ -2,174 +2,173 @@
 <html>
 
 <head>
-    <title>test</title>
-    <style type="text/css">
-        * {
-            margin: 1px;
-        }
-        
-        canvas {}
-    </style>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.23/p5.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.js"></script>
+  <title>test</title>
+  <style type="text/css">
+    * {
+      margin: 1px;
+    }
+    
+    canvas {}
+  </style>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/addons/p5.dom.js"></script>
 </head>
 
 <body>
-    <script type="text/javascript">
-        // following dan shiffman's coding train coding challenge
-// because it's fun and eliminates pointless suffering on my part
+  <script type="text/javascript">
+    // following dan shiffman's coding train coding challenge
+    // because it's fun and eliminates pointless suffering on my part
 
-var polygons = [];
-var n;
-var angle;
-var delta;
-var gridAlpha;
+    var polygons = [];
+    var n;
+    var angle;
+    var delta;
+    var gridAlpha;
 
-var angleSlider;
-var deltaSlider;
-var gridAlphaSlider;
+    var angleSlider;
+    var deltaSlider;
+    var gridAlphaSlider;
 
-function setup() {
-  createCanvas(400, 400);
-  background(0);
-  //angleMode(DEGREES);
+    function setup() {
+      createCanvas(400, 400);
+      background(0);
+      //angleMode(DEGREES);
 
-  n = 4; // square
-  angleSlider = createSlider(0, 90, 60);
-  deltaSlider = createSlider(0, 25, 0);
-  gridAlphaSlider = createSlider(0, 100, 50);
+      n = 4; // square
+      angleSlider = createSlider(0, 90, 60);
+      deltaSlider = createSlider(0, 25, 0);
+      gridAlphaSlider = createSlider(0, 100, 50);
 
-  var inc = 100;
-  for (var x = 0; x < width; x += inc) {
-    for (var y = 0; y < height; y += inc) {
-      var polygon = new Polygon(n);
-      polygon.addVertex(x, y);
-      polygon.addVertex(x+inc, y);
-      polygon.addVertex(x+inc, y+inc);
-      //polygon.addVertex(150, 250); // test diff polygon
-      polygon.addVertex(x, y+inc);
-      polygon.close();
-      polygons.push(polygon);
-    }
-  }
+      var inc = 100;
+      for (var x = 0; x < width; x += inc) {
+        for (var y = 0; y < height; y += inc) {
+          var polygon = new Polygon(n);
+          polygon.addVertex(x, y);
+          polygon.addVertex(x + inc, y);
+          polygon.addVertex(x + inc, y + inc);
+          //polygon.addVertex(150, 250); // test diff polygon
+          polygon.addVertex(x, y + inc);
+          polygon.close();
+          polygons.push(polygon);
+        }
+      }
 
-}
-
-function draw() {
-  background(0);
-  angle = angleSlider.value();
-  delta = deltaSlider.value();
-  gridAlpha = gridAlphaSlider.value();
-
-  for (var i = 0; i < polygons.length; i++) {
-    var p = polygons[i];
-    p.hankin();
-    p.show();
-  }
-}
-
-function Polygon(n) {
-  this.n = n;
-  this.vertices = [];
-  this.edges = [];
-
-  this.addVertex = function(x, y) {
-    var a = createVector(x, y);
-    var total = this.vertices.length;
-    if (total > 0) {
-      var prev = this.vertices[total-1];
-      var edge = new Edge(prev,a);
-      this.edges.push(edge);
-    }
-    this.vertices.push(a);
-  };
-
-  this.close = function() {
-    var total = this.vertices.length;
-    var last = this.vertices[total-1];
-    var first = this.vertices[0];
-    var edge = new Edge(last, first);
-    this.edges.push(edge);
-  };
-
-  this.hankin = function() {
-    for (var i = 0; i < this.edges.length; i++) {
-      this.edges[i].hankin(this.n);
     }
 
-  };
+    function draw() {
+      background(0);
+      angle = angleSlider.value();
+      delta = deltaSlider.value();
+      gridAlpha = gridAlphaSlider.value();
 
-  this.show = function() {
-    for (var i = 0; i < this.edges.length; i++) {
-      this.edges[i].show();
-    }
-  }
-}
-
-function Edge(a, b) {
-  this.a = a;
-  this.b = b;
-  this.h1;
-  this.h2;
-
-  this.show = function() {
-    stroke(255, gridAlpha);
-    line(this.a.x, this.a.y, this.b.x, this.b.y);
-
-    this.h1.show();
-    this.h2.show();
-  };
-
-  this.hankin = function(n) {
-    var mid = p5.Vector.add(this.a, this.b);
-    mid.mult(0.5);
-    
-    var v1 = p5.Vector.sub(this.a, mid);
-    var v2 = p5.Vector.sub(this.b, mid);
-
-    var eLen = v1.mag() + delta;
-
-    var offset1 = mid;
-    var offset2 = mid;
-
-    if (delta > 0) {
-      v1.setMag(delta);
-      v2.setMag(delta);
-      offset1 = p5.Vector.add(mid, v2); // opposing
-      offset2 = p5.Vector.add(mid, v1);
+      for (var i = 0; i < polygons.length; i++) {
+        var p = polygons[i];
+        p.hankin();
+        p.show();
+      }
     }
 
-    v1.rotate(radians(-angle));
-    v2.rotate(radians(angle));
+    function Polygon(n) {
+      this.n = n;
+      this.vertices = [];
+      this.edges = [];
 
-    // find ends
+      this.addVertex = function(x, y) {
+        var a = createVector(x, y);
+        var total = this.vertices.length;
+        if (total > 0) {
+          var prev = this.vertices[total - 1];
+          var edge = new Edge(prev, a);
+          this.edges.push(edge);
+        }
+        this.vertices.push(a);
+      };
 
-    var intAngle = ((n-2)*PI)/n;
-    var alpha = intAngle*.5;
-    var beta = PI - radians(angle) - alpha;
-    var mag = eLen * sin(alpha)/ sin(beta);
-    v1.setMag(mag);
-    v2.setMag(mag);
+      this.close = function() {
+        var total = this.vertices.length;
+        var last = this.vertices[total - 1];
+        var first = this.vertices[0];
+        var edge = new Edge(last, first);
+        this.edges.push(edge);
+      };
 
-    this.h1 = new Hankin(offset1, v1);
-    this.h2 = new Hankin(offset2, v2);
-  };
+      this.hankin = function() {
+        for (var i = 0; i < this.edges.length; i++) {
+          this.edges[i].hankin(this.n);
+        }
 
-}
+      };
 
-function Hankin(a, v) {
-  // midpoints at edge, which have two vectors extending from it
-  this.a = a;
-  this.v = v;
-  this.b = p5.Vector.add(a, v);
+      this.show = function() {
+        for (var i = 0; i < this.edges.length; i++) {
+          this.edges[i].show();
+        }
+      }
+    }
 
-  this.show = function() {
-    stroke(255);
-    line(this.a.x, this.a.y, this.b.x, this.b.y);
-  }
-}
+    function Edge(a, b) {
+      this.a = a;
+      this.b = b;
+      this.h1;
+      this.h2;
 
-    </script>
+      this.show = function() {
+        stroke(255, gridAlpha);
+        line(this.a.x, this.a.y, this.b.x, this.b.y);
+
+        this.h1.show();
+        this.h2.show();
+      };
+
+      this.hankin = function(n) {
+        var mid = p5.Vector.add(this.a, this.b);
+        mid.mult(0.5);
+
+        var v1 = p5.Vector.sub(this.a, mid);
+        var v2 = p5.Vector.sub(this.b, mid);
+
+        var eLen = v1.mag() + delta;
+
+        var offset1 = mid;
+        var offset2 = mid;
+
+        if (delta > 0) {
+          v1.setMag(delta);
+          v2.setMag(delta);
+          offset1 = p5.Vector.add(mid, v2); // opposing
+          offset2 = p5.Vector.add(mid, v1);
+        }
+
+        v1.rotate(radians(-angle));
+        v2.rotate(radians(angle));
+
+        // find ends
+
+        var intAngle = ((n - 2) * PI) / n;
+        var alpha = intAngle * .5;
+        var beta = PI - radians(angle) - alpha;
+        var mag = eLen * sin(alpha) / sin(beta);
+        v1.setMag(mag);
+        v2.setMag(mag);
+
+        this.h1 = new Hankin(offset1, v1);
+        this.h2 = new Hankin(offset2, v2);
+      };
+
+    }
+
+    function Hankin(a, v) {
+      // midpoints at edge, which have two vectors extending from it
+      this.a = a;
+      this.v = v;
+      this.b = p5.Vector.add(a, v);
+
+      this.show = function() {
+        stroke(255);
+        line(this.a.x, this.a.y, this.b.x, this.b.y);
+      }
+    }
+  </script>
 </body>
 
 </html>

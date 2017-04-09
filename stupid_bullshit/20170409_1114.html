@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>flappy land</title>
+  <style type="text/css">
+    * {
+      margin: 1px;
+    }
+    
+    canvas {}
+  </style>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/addons/p5.dom.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    // based on dan shiffman's coding challenge #11
+
+    // draw terrain as triangle_strips
+    // then manipulate vertices of the triangle_strips
+
+    var points;
+    var cols, rows;
+    var unit;
+
+    var minZ, maxZ;
+    var flying;
+
+    function setup() {
+      createCanvas(800, 600, WEBGL);
+      unit = 15;
+      cols = 25;
+      rows = 25;
+
+      //stroke(255);
+      minZ = -150;
+      maxZ = 150;
+      flying = 0;
+    }
+
+    function calculatePts() {
+      points = [];
+      var yoff = flying;
+      for (var j = 0; j <= rows; j++) {
+        var row = []
+        var xoff = 0;
+        for (var i = 0; i <= cols; i++) {
+          var z = map(noise(xoff, yoff), 0, 1, minZ, maxZ);
+          row.push(z);
+          xoff += 0.1;
+        }
+        points.push(row);
+        yoff += 0.1;
+      }
+    }
+
+    function draw() {
+      background(0);
+      calculatePts();
+      push();
+      rotateX(-0.5);
+      translate(-(cols * unit) / 2, -(rows * unit) / 2, 0);
+      for (var j = 0; j < rows; j++) {
+        beginShape(TRIANGLE_STRIP);
+        for (var i = 0; i < cols; i++) {
+          var z = points[j][i];
+          var red = map(z, minZ, maxZ, 0, 255);
+          var green = map(j * 10, 0, rows * 10, 0, 255);
+          fill(red, green, 200);
+          vertex(i * unit, j * unit, points[j][i]);
+          vertex(i * unit, (j + 1) * unit, points[j + 1][i]);
+        }
+        endShape();
+      }
+      pop();
+      flying -= 0.1;
+    }
+  </script>
+</body>
+
+</html>
