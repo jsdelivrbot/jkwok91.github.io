@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>jagged plane</title>
+    <style type="text/css">
+        * {
+            margin: 1px;
+        }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+
+</head>
+
+<body>
+    <script type="text/javascript">
+      // do i remember anything from three.js?????
+// the answer is no
+
+// kool weird jagged landscape that is totally not correct
+
+var camera, scene, renderer;
+
+init();
+animate();
+
+var mesh;
+var points, unit;
+var rows, cols;
+
+function init() {
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
+  camera.position.set(0, 0, 100);
+  renderer = new THREE.WebGLRenderer( {antialias: true }); // still no idea what the diff types of renderers do???
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  points = [];
+  unit = 25;
+
+  cols = 20;
+  rows = 10;
+
+  getPoints();
+}
+
+function getPoints() {
+  points = [];
+  for (var j = 0; j < rows; j++) {
+    var row = [];
+    for (var i = 0; i < cols; i++) {
+      var z = unit*(Math.random()-0.5);
+      row.push(z);
+    }
+    points.push(row);
+  }
+}
+
+function getPt(x, y) {
+  return new THREE.Vector3(x*unit, y*unit, points[y][x]);
+}
+
+function drawTerrain() {
+  var m1 = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.5
+  });
+
+  var g1 = new THREE.Geometry();
+
+  for (var j = 0; j < rows-1; j++) {
+    for (var i = 0; i < cols-1; i++) {
+
+      g1.vertices.push(
+        getPt(i, j),
+        getPt(i, j+1),
+
+        getPt(i, j),
+        getPt(i+1, j),
+ 
+        getPt(i, j),
+        getPt(i+1, j+1)
+      );
+
+
+      if (i == cols-2) {
+        g1.vertices.push(
+          getPt(i+1, j),
+          getPt(i+1, j+1)
+        );
+      }
+      if (j == rows-2) {
+        g1.vertices.push(
+          getPt(i, j+1),
+          getPt(i+1, j+1)
+        );
+      }
+    }
+  }
+
+  mesh = new THREE.LineSegments(
+    g1,
+    new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.5
+    })
+  );
+  mesh.position.set(-(cols*unit)/2, -(rows*unit)/4, -(rows*unit)/4);
+  mesh.rotation.x = -0.5;
+
+  scene.add(mesh);
+}
+
+function getNext(i, j) {
+  var n = points[j][i];
+
+  var startY = (j > 0) ? j-1 : j;
+  var startX = (i > 0) ? i-1 : i;
+  var endY = (j < rows-1) ? j+1 : j;
+  var endX = (i < cols-1) ? i+1 : i;
+
+  var neighbors = [];
+  for (var y = startY; y <= endY; y++) {
+    for (var x = startX; x <= endX; x++) {
+      //if (y != j && i != x) {
+        neighbors.push(points[y][x]);
+      //}
+    }
+  }
+
+  var sum = neighbors.reduce(function(acc, n) {
+    return acc+n;
+  }, 0);
+  var avg = sum/neighbors.length;
+  // ok i hve no idea how to write a good random fn lol
+  if (Math.abs(avg-n) < 0.1) {
+    n += (Math.random() - 0.5)*2*unit;
+  } else if (n > avg) {
+    n -= 0.1;
+  } else {
+    n += 0.1;
+  }
+  points[j][i] = n;
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  render();
+}
+
+function render() {
+  while(scene.children.length > 0){ 
+    scene.remove(scene.children[0]); 
+  }
+
+  points.map(function(row, j) {
+    row.map(function(pt, i) {
+      getNext(i, j);
+    });
+  });
+  drawTerrain();
+  renderer.render(scene, camera);
+}
+    </script>
+</body>
+
+</html>
