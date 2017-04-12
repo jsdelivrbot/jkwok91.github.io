@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>flappy land</title>
+  <style type="text/css">
+    * {
+      margin: 1px;
+    }
+    
+    canvas {}
+  </style>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/addons/p5.dom.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    // flowfield
+    // sorry not sorry that i called these boops
+    // also sometimes they disappear and idfk why
+
+    var field;
+    var unit;
+    var time;
+    var cols, rows;
+
+    var off;
+
+    var numBoops, boops;
+    
+    var slider, textDisplay;
+
+    function setup() {
+      textDisplay = createP("number active: " + 16);
+      slider = createSlider(1, 52, 16, 3);
+      slider.changed(updateBoops);
+      var button = createButton("freeze/unfreeze");
+      button.mousePressed(freezeField);
+      createCanvas(300, 300);
+      
+      off = false;
+      unit = 10;
+      time = 0;
+
+      cols = width / unit;
+      rows = height / unit;
+
+      numBoops = slider.value();
+      boops = [];
+
+      constructField();
+      for (var i = 0; i < numBoops; i++) {
+        addBoop();
+      }
+    }
+    
+    function addBoop() {
+      boop = new Boop(createVector(random(width), random(height)));
+      boops.push(boop);
+    }
+    
+    function updateBoops() {
+      numBoops = slider.value();
+      if (numBoops < boops.length) {
+        boops.splice(numBoops);
+      } else {
+        for (var i = 0; i < numBoops - boops.length; i++) {
+          addBoop();
+        }
+      }
+      textDisplay.html("number active: " + numBoops);
+    }
+
+    function constructField() {
+      field = [];
+
+      var yoff = time;
+      for (var j = 0; j < rows; j++) {
+        var xoff = 0;
+        var row = [];
+        for (var i = 0; i < cols; i++) {
+          var pos = createVector(i * unit, j * unit);
+          var angle = map(noise(xoff, yoff), 0, 1, PI / 2, TWO_PI + PI / 2);
+          row.push(new Force(pos, angle));
+          xoff += 0.05;
+        }
+        field.push(row);
+        yoff += 0.05;
+      }
+    }
+
+    function Force(pos, angle) {
+      this.pos = pos.copy();
+      this.dir = createVector(cos(angle), sin(angle));
+      this.end = pos.add(this.dir.mult(unit));
+
+      this.show = function() {
+        line(this.pos.x, this.pos.y, this.end.x, this.end.y);
+      }
+    }
+
+    function draw() {
+      background(255);
+      constructField();
+      field.map(function(row) {
+        row.map(function(v) {
+          v.show();
+        });
+      });
+      boops.map(function(boop) {
+        boop.move();
+        boop.show();
+      });
+      time += 0.01;
+    }
+
+    function Boop(pos) {
+      this.pos = pos;
+      var coorX = floor(this.pos.x / unit);
+      var coorY = floor(this.pos.y / unit);
+      var coor = field[coorY][coorX];
+      this.dir = coor.dir;
+
+      this.move = function() {
+        // wow i have no idea how to move this thing
+        this.pos.add(this.dir);
+        var coorX = floor(this.pos.x / unit) % cols;
+        var coorY = floor(this.pos.y / unit) % rows;
+
+        // if boop reaches the edge, dial it back
+
+        if (coorX < 0 || coorX >= cols) {
+          coorX = (coorX + cols) % cols;
+          this.pos.x = coorX * unit;
+        }
+        if (coorY < 0 || coorY >= rows) {
+          coorY = (coorY + rows) % rows;
+          this.pos.y = coorY * unit;
+        }
+        var coor = field[coorY][coorX];
+        this.dir = coor.dir;
+      }
+
+      this.show = function() {
+        fill("red");
+        ellipse(this.pos.x, this.pos.y, 5, 5);
+      }
+    }
+
+    function freezeField() {
+      if (off) {
+        loop();
+      }
+      else {
+        noLoop();
+      }
+      off = !off;
+    }
+  </script>
+</body>
+
+</html>
