@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>plus sign</title>
+  <style type="text/css">
+    * {
+      margin: 1px;
+    }
+    
+    canvas {}
+  </style>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.min.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    // plus sign
+    // 16 april
+    // inspired by saskia freeke (https://twitter.com/sasj_nl)
+
+    var shapes;
+    var theta;
+
+    function setup() {
+      createCanvas(400, 300);
+      angleMode(DEGREES);
+      theta = 0;
+      var box = 50;
+      shapeRad = (box - 10) / 2;
+      shapeN = 4; // currently i have not calculated the connecting lines for n!=4
+
+      var numShapesAcross = width / box;
+      var numShapesDown = height / box;
+
+      shapes = [];
+      for (var j = 0; j <= numShapesDown; j++) {
+        for (var i = 0; i <= numShapesAcross; i++) {
+          shapes.push(new Shape(createVector(i * box, j * box), shapeRad, shapeN));
+        }
+      }
+      //noLoop();
+    }
+
+    function draw() {
+      background(255);
+      stroke("red");
+      ellipse(width / 2, height / 2, 2, 2);
+      stroke(0);
+      shapes.map(function(shape) {
+        shape.undulate();
+        shape.show();
+      });
+      theta = (theta + 2) % 360;
+    }
+
+    function Corner(rad, angle) {
+      this.center = createVector(0, 0);
+      this.rad = rad;
+      this.angle = angle; //angle in relation to center
+
+      this.centerPt = createVector(
+        this.center.x + this.rad * cos(this.angle),
+        this.center.y + this.rad * sin(this.angle)
+      );
+
+      this.leftPt = this.centerPt.copy();
+      this.rightPt = this.centerPt.copy();
+
+      this.undulate = function() {
+        this.leftPt.x = this.rad * sin(theta);
+        this.rightPt.y = this.rad * sin(theta);
+      }
+
+      this.show = function() {
+        line(this.leftPt.x, this.leftPt.y, this.leftPt.x, this.center.y);
+        line(this.leftPt.x, this.leftPt.y, this.centerPt.x, this.centerPt.y);
+        line(this.centerPt.x, this.centerPt.y, this.rightPt.x, this.rightPt.y);
+        line(this.rightPt.x, this.rightPt.y, this.center.x, this.rightPt.y);
+      }
+    }
+
+    function Shape(center, rad, numCorners) {
+      this.center = center;
+      this.corners = [];
+
+      for (var i = 0; i < numCorners; i++) {
+        var angle = 180 / numCorners;
+        this.corners.push(new Corner(rad, angle));
+      }
+
+      this.undulate = function() {
+        this.corners.map(function(c) {
+          c.undulate();
+        });
+      }
+
+      this.show = function() {
+        push();
+        translate(this.center.x, this.center.y);
+        this.corners.map(function(c, i) {
+          push();
+          rotate(i * 360 / numCorners);
+          c.show();
+          pop();
+        });
+        pop();
+      }
+    }
+  </script>
+</body>
+
+</html>
