@@ -1,0 +1,172 @@
+<!doctype HTML>
+<html>
+
+<head>
+  <title>index</title>
+  <!-- disclaimer, this uses a mint digital logo which i am in no way authorized to use.
+       it also uses urban sherpa, which is a real ski trip website that i have used to
+       book trips in the past. anyway this website is horrifying and yet i am not embarrassed -->
+  <!--link href="style.css" type="text/css" rel="stylesheet"/-->
+  <style type="text/css">
+    body {
+      font-family: Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    a {
+      text-decoration: none;
+    }
+    
+    a:hover {
+      font-weight: bold;
+    }
+    
+    #container {
+      min-width: 500px;
+    }
+    
+    #header {
+      height: 50px;
+      padding: 10px 15px 5px 15px;
+      position: relative;
+    }
+    
+    .left {
+      position: absolute;
+      left: 15px;
+      bottom: 5px;
+    }
+    
+    #header-left h1 {
+      font-size: 3em;
+      margin: 0;
+    }
+    
+    .right {
+      position: absolute;
+      text-align: right;
+      right: 15px;
+      bottom: 5px;
+    }
+    
+    #logo {
+      height: 1.5em;
+    }
+    
+    #slogan {
+      font-style: italic;
+    }
+    
+    #menu {
+      height: 1em;
+      background-color: #14f4a2;
+      padding: 5px;
+    }
+    
+    #menu ul {
+      margin: 0;
+      height: 100%;
+      padding: 0;
+      text-align: center;
+      list-style-type: none;
+    }
+    
+    .menu-item {
+      display: inline-block;
+      width: 3em;
+      padding: 0 5%;
+    }
+    
+    #content-announcement {
+      text-align: center;
+      color: #cc0000;
+    }
+    
+    #calendar {
+      margin: 0 5% 1.5em 5%;
+    }
+    
+    #footer {
+      padding: 15px;
+      height: 3em;
+      background-color: #14f4a2;
+      position: relative;
+    }
+  </style>
+  <link href="http://arshaw.com/js/fullcalendar-1.6.4/fullcalendar/fullcalendar.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="container">
+    <div id="header">
+      <div id="header-left" class="left">
+        <h1>URBAN SHERPA</h1>
+      </div>
+      <div id="header-right" class="right">
+        <img id="logo" src="logo.png" />
+        <div id="slogan">True justice means everyone suffers</div>
+      </div>
+    </div>
+    <div id="menu">
+      <ul>
+        <li class="menu-item"><a href="#">Trips</a></li>
+        <li class="menu-item"><a href="#">About</a></li>
+        <li class="menu-item"><a href="#">Deals</a></li>
+        <li class="menu-item"><a href="#">Stuff</a></li>
+        <li class="menu-item"><a href="#">Things</a></li>
+      </ul>
+    </div>
+    <div id="content">
+      <h2 id="content-announcement">NEW TRIPS HAPPENING NOW</h2>
+      <div id="calendar">
+      </div>
+    </div>
+    <div id="footer">
+      <div id="contact-info" class="left">
+        345 Chambers St.<br/>New York, NY 10282
+      </div>
+      <div id="credit" class="right">
+        Design by: Nunya Biznez
+      </div>
+    </div>
+  </div>
+</body>
+<div style="display:none;" id="trip-template">
+  <h1 id="trip"></h1>
+  <h2 id="date"></h2>
+  <p>You'll have the time of your life!</p>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://arshaw.com/js/fullcalendar-1.6.4/fullcalendar/fullcalendar.min.js"></script>
+<script type="text/javascript">
+  /* broken LMFAO
+    (function($) {
+      $('#calendar').fullCalendar({
+          // put your options and callbacks here
+          dayClick: function(date) {
+            //alert("you clicked "+date.getDate());
+            $("#trip-template > #date").text((date.getMonth()+1)+"/"+date.getDate());
+            console.log($("#trip-template").html());
+            $("#content").html($("#trip-template").html());
+          }
+      })
+      $.getJSON('tripdates.json',function(resp) {
+        console.log(resp["tripdates"][0]);
+        
+        var currentNow = new Date();
+        var currentYear = currentNow.getYear()+1900;
+        var currentMon = currentNow.getMonth()+1;
+        var thisYear = resp[currentYear.toString()];
+        var thisMonth = thisYear[currentMo.toString()];
+        thisMonth.forEach(function(i) {
+          var trip = $('<li>').text(i['name']);
+          $('#calendar').append(trip);
+        });
+        
+      });
+    })(jQuery);
+    */
+</script>
+
+</html>

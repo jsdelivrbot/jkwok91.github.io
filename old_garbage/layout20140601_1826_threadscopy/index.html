@@ -1,0 +1,164 @@
+<!doctype HTML>
+<html>
+
+<head>
+  <title>index</title>
+  <!--link rel="stylesheet" type="text/css" href="style.css"/-->
+  <!-- why did i put my stylesheet before the others??-->
+  <link rel="stylesheet" type="text/css" href="http://oocss.org/css/grids.css" />
+  <link rel="stylesheet" type="text/css" href="http://oocss.org/css/content.css" />
+  <!-- why is their font styling not showing up -->
+  <!-- tbh i really do not gaf -->
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-weight: 100;
+    }
+    
+    #container {}
+    
+    header {
+      margin: 50px 50px 0;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    header p,
+    header h1 {
+      margin: 0;
+      padding: 0;
+    }
+    
+    .main {
+      margin: 25px 50px;
+    }
+    
+    .project {
+      margin: 10px;
+      border: 1px lightgray solid;
+      border-radius: 5px;
+    }
+    
+    .project-title {
+      background-color: #e9e9e9;
+      padding: 10px 15px;
+      border-bottom: 1px lightgray solid;
+    }
+    
+    .project-desc {
+      margin: 10px 15px;
+      padding-top: 10px;
+    }
+    
+    .project-resources {
+      margin: 10px 15px;
+      padding: 0 0 10px 0;
+      list-style-type: none;
+    }
+    
+    .project-resources li {
+      display: inline-block;
+      padding: 3px;
+      border-radius: 5px;
+      background-color: #999999;
+      font-size: .75em;
+    }
+    
+    .project-resources li:hover {
+      background-color: #aaaaaa;
+    }
+    
+    .project-resources li a {
+      color: white;
+      text-decoration: none;
+    }
+    
+    .project-resources li.doc {
+      background-color: #5cb85c;
+    }
+    
+    .project-resources li.doc:hover {
+      /* did not really pick this color, just guessed at a nearby color */
+      background-color: #5ac85b;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header class="line">
+      <h1>My Projects</h1>
+      <p>A series of projects I've done</p>
+      <p>Based on <a href="http://dev.thread.com">Thread's webpage</a></p>
+    </header>
+    <div class="main">
+      <div class="line">
+        <div class="unit size1of2">
+          <div class="project">
+            <div class="project-title">
+              Project 1
+            </div>
+            <div class="project-desc">
+              I'm using OOCSS, or trying to.
+            </div>
+            <ul class="project-resources">
+              <li class="doc"><a href="#">Documentation</a></li>
+              <li><a href="#">Code</a></li>
+              <li><a href="#">Issues</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="unit size1of2">
+          <div class="project">
+            <div class="project-title">
+              Project 2
+            </div>
+            <div class="project-desc">
+              Should've probably used flexbox. or some custom thing i did myself?
+            </div>
+            <ul class="project-resources">
+              <li class="doc"><a href="#">Documentation</a></li>
+              <li><a href="#">Code</a></li>
+              <li><a href="#">Issues</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="line">
+        <div class="unit size1of2">
+          <div class="project">
+            <div class="project-title">
+              Project 3
+            </div>
+            <div class="project-desc">
+              Damn, did they use media queries or something?
+            </div>
+            <ul class="project-resources">
+              <li class="doc"><a href="#">Documentation</a></li>
+              <li><a href="#">Code</a></li>
+              <li><a href="#">Issues</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="unit size1of2">
+          <div class="project">
+            <div class="project-title">
+              Project 4
+            </div>
+            <div class="project-desc">
+              This is the fourth project I wish to describe.
+            </div>
+            <ul class="project-resources">
+              <li class="doc"><a href="#">Documentation</a></li>
+              <li><a href="#">Code</a></li>
+              <li><a href="#">Issues</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

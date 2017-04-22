@@ -1,0 +1,56 @@
+body {
+  font-family: Helvetica;
+}
+#content {
+  width: 800px;
+  margin: auto;
+}
+.box {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 1px;
+    float: left;
+}
+.info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    padding: 10px;
+}
+.category {
+    font-size: .5em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 1px 3px;
+    margin: 0;
+    background-color: rgb(228,228,228);
+    color: black;
+}
+.titleN {
+    font-size: 3em;
+    font-weight: 500;
+    color: white;
+}
+.desc {
+    font-size: .75em;
+    color: white;
+}
+.doublebox {
+    width: 500px;
+    height: 250px;
+    margin: 1px;
+    float: left;
+}
+.doublebox .titleN {
+    text-align: center;
+    font-size: 6em;
+    font-weight: 600;
+    color: white;
+    margin-top: 75px;
+}
+.doublebox .slogan {
+    text-align: center;
+    font-size: 1.5em;
+    color: white;
+}

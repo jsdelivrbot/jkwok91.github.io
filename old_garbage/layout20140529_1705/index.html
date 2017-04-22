@@ -1,0 +1,81 @@
+<!doctype HTML>
+<html>
+
+<head>
+  <title>index</title>
+  <!--<link rel="stylesheet" type="text/css" href="style.css"/>-->
+  <!-- to be fair i did properly manage my files for the most part, but i want to condense so idgaf anymore -->
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Helvetica;
+    }
+    
+    #container {}
+    
+    #my-bg {
+      height: 1000px;
+      width: 100%;
+      position: relative;
+      background: url(popcorn.jpg) fixed;
+    }
+    
+    #overlay {
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      background-color: rgba(200, 200, 200, 0.7);
+    }
+    
+    #content {
+      padding: 50px;
+      min-width: 400px;
+      max-width: 960px;
+      width: 50%;
+      position: absolute;
+      top: 150px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <section class="background" data-speed="10" id="my-bg">
+      <div id="overlay"></div>
+      <div id="content">
+        <h2>
+          lorem ipsum text.
+        </h2>
+        <p>
+          Most common geometric transformations that keep the origin fixed are linear, including rotation, scaling, shearing, reflection, and orthogonal projection; if an affine transformation is not a pure translation it keeps some point fixed, and that point
+          can be chosen as origin to make the transformation linear. In two dimensions, linear transformations can be represented using a 2×2 transformation matrix.
+        </p>
+        <p>
+          Matrices allow arbitrary linear transformations to be represented in a consistent format, suitable for computation.[1] This also allows transformations to be concatenated easily (by multiplying their matrices).
+        </p>
+      </div>
+    </section>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    // not gonna lie, i ripped this from http://code.tutsplus.com/tutorials/a-simple-parallax-scrolling-technique--net-27641
+    $(document).ready(function() {
+      $('.background').each(function() {
+        var $bgobj = $(this); // assigning the object
+
+        $(window).scroll(function() {
+          var yPos = -($(window).scrollTop() / $bgobj.data('speed'));
+
+          // Put together our final background position
+          var coords = '0 ' + yPos + 'px';
+
+          // Move the background
+          $bgobj.css("background-position", coords);
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

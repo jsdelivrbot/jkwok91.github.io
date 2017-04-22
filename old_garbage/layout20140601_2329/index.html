@@ -1,0 +1,104 @@
+<!doctype HTML>
+<html>
+
+<head>
+  <title>index</title>
+  <link rel="stylesheet" type="text/css" href="http://oocss.org/css/grids.css" />
+  <!--link rel="stylesheet" type="text/css" href="style.css"/-->
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Helvetica;
+    }
+    
+    p {
+      margin: 0;
+    }
+    
+    .box {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    #jajin {
+      background: url(https://farm8.staticflickr.com/7381/14189910294_66b3106219_o.jpg) 50% 10%;
+    }
+    
+    #second-box {
+      font-size: 110%;
+      font-weight: 100;
+      color: orange;
+    }
+    
+    .p-lg {
+      font-size: 2em;
+      margin: 0;
+    }
+    
+    #text-over-img {
+      background-image: url(https://farm8.staticflickr.com/7345/12531776945_0cff5e6abf.jpg);
+      color: red;
+    }
+    
+    .on-left {
+      text-align: left;
+    }
+    
+    .on-right {
+      text-align: right;
+    }
+    
+    .wrap {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+    }
+    
+    #other-stuff {
+      /* i dont give a shit. this is a specific box. im styling a specific box. so i'm using an ID */
+      background-color: teal;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="line">
+      <div class="box unit size1of4" id="jajin">
+        <p>this isn't me</p>
+      </div>
+      <div class="box unit size3of4" id="second-box">
+        <div class="wrap">
+          <p>Jessica Kwok</p>
+          <p class="p-lg">Super Terrible at Layouts</p>
+        </div>
+      </div>
+    </div>
+    <div class="line">
+      <div class="box unit size2of3" id="text-over-img">
+        <h3 class="on-left">text on the left</h3>
+        <h3 class="on-right">more text on the right!</h3>
+        <p class="on-right">why the fuck would i have this ever</p>
+      </div>
+      <div class="box unit size1of3" id="fourth-box">
+        <h3>Here's more text</h3>
+        <p>Long description where I ramble about nothing to fill up space look more runonsentences how the hell do people even write runonsentences by accident. do you talk in runon sentences. like, why would you write in them</p>
+      </div>
+    </div>
+    <div class="line">
+      <div class="box unit size1of4" id="fifth-box">
+        <p>text over a colored bg</p>
+      </div>
+      <div class="box unit size1of2" id="sixth-box">
+        <img src="https://farm6.staticflickr.com/5082/5288660913_e095539522_z.jpg" alt="another image" />
+      </div>
+      <div class="box unit size1of4" id="other-stuff">
+        <h3>other stuff</h3>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

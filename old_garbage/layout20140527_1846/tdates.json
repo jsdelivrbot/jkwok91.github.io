@@ -1,0 +1,73 @@
+{
+  "tripdates": [
+    { 
+      "2014": 
+        {
+          "5": 
+        [
+          { id: 723819,
+            date: "May 5",
+            name: "Breckenridge Trip",
+            departure: "07:00EST",
+            cost: 80.00,
+          },
+          { id: 723820,
+            date: "May 5",
+            name: "Hunter Mtn Trip",
+            departure: "07:00EST",
+            cost: 80.00,
+          },
+          { id: 723821,
+            date: "May 5",
+            name: "Windham Mtn Trip",
+            departure: "07:00EST",
+            cost: 85.00,
+          },
+          { id: 764882,
+            date: "May 6",
+            name: "Vail Trip",
+            departure: "07:00EST",
+            cost: 95.00,
+          },
+          { id: 723723,
+            date: "May 6",
+            name: "Hunter Mtn Trip",
+            departure: "07:00EST",
+            cost: 80.00,
+          },
+          { id: 721772,
+            date: "May 9",
+            name: "Windham Mtn Trip",
+            departure: "08:00EST",
+            cost: 82.00,
+          }
+        ],
+      "6": [
+          { id: 764182,
+            date: "June 8",
+            name: "Vail Trip",
+            departure: "06:00EST",
+            cost: 95.00,
+          },
+          { id: 720723,
+            date: "June 8",
+            name: "Bellayre Trip",
+            departure: "07:00EST",
+            cost: 85.00,
+          },
+          { id: 821772,
+            date: "June 19",
+            name: "Windham Mtn Trip",
+            departure: "08:00EST",
+            cost: 82.00,
+          }
+        ],
+      "7": [
+      ]
+    },
+    "2015": {
+      "1": [
+      ]
+    }
+  }]
+}
