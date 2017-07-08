@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>help</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+
+<body>
+  <div>
+    <div id="errorMsg"></div>
+    <select id="objectDD">
+      <option value="">Select Object</option>
+      <option value="vardagenMug">Mug</option>
+      <option value="ikea365Mug">Mug2</option>
+      <option value="teapot">Teapot</option>
+      <option value="sofa">Sofa</option>
+      <option value="island">Island Table</option>
+      <option value="endTable">End Table</option>
+      <option value="bookshelf">Bookshelf</option>
+    </select>
+    <button id="loadObj">Load Object</button>
+
+  </div>
+  <div id="container"></div>
+
+  <script src="lib/three.js"></script>
+  <script src="lib/ColladaLoader.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+
+  <script>
+    var container;
+    var camera, scene, renderer, controls;
+    var loader, loadBtn, objDD, errorMsg;
+
+    errorMsg = document.getElementById("errorMsg");
+
+    init();
+    animate();
+
+    function loadDae(filename) {
+      loader.load(filename, function(collada) {
+        var object = collada.scene;
+        removeEntity("thing");
+        object.position.set(0, 0, 0);
+        object.rotation.set(-Math.PI / 2, 0, 0);
+        object.name = "thing";
+        scene.add(object);
+
+        loadBtn.disabled = false;
+        loadBtn.innerHTML = "Load Object";
+      })
+    }
+
+    function init() {
+      container = document.getElementById('container');
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+      camera.position.set(8, 4, 10);
+      scene = new THREE.Scene();
+
+      loader = new THREE.ColladaLoader();
+      loadBtn = document.getElementById('loadObj');
+      objDD = document.getElementById("objectDD");
+
+      //
+      var gridHelper = new THREE.GridHelper(10, 20);
+      scene.add(gridHelper);
+      //
+      var ambientLight = new THREE.AmbientLight(0xcccccc);
+      scene.add(ambientLight);
+      var directionalLight = new THREE.DirectionalLight(0xffffff);
+      directionalLight.position.set(0, 1, -1).normalize();
+      scene.add(directionalLight);
+      //
+      renderer = new THREE.WebGLRenderer();
+      renderer.setClearColor(0xf0f0f0);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+      //
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      //
+      window.addEventListener('resize', onWindowResize, false);
+    }
+
+    loadBtn.onclick = function() {
+      if (objDD.value) {
+        errorMsg.innerHTML = "";
+        loadBtn.disabled = true;
+        loadBtn.innerHTML = "Loading...";
+        loadDae('lib/' + objDD.value + '.dae');
+      }
+      else {
+        errorMsg.innerHTML = "Please select object."
+      }
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function removeEntity(name) {
+      var selectedObject = scene.getObjectByName(name);
+      if (!!selectedObject) {
+        scene.remove(selectedObject);
+      }
+      //animate();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      render();
+    }
+
+    function render() {
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+
+</html>
