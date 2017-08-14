@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title>Task Estimate Graph</title>
+    <link href="styles.css" type="text/css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div class="filterOptions">
+        <button id="clearFilters">show all</button>
+        <div id="selectPriority">
+          <button class="toggleDropdown">priority</button>
+        </div>
+        <div id="selectResolution">
+          <button class="toggleDropdown">resolution</button>
+        </div>
+        <div id="selectGroup">
+          <button class="toggleDropdown">group</button>
+        </div>
+      </div>
+
+      <div id="graph"></div>
+
+    </div>
+
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="formatData.js"></script>
+    <script src="createUI.js"></script>
+    <script src="createChart.js"></script>
+    <script>
+
+      var graphElement = "#graph";
+
+      var promises = [];
+      function loadFile(jsonFile) {
+        promises.push(new Promise(function(resolve, reject) {
+          $.getJSON(jsonFile, resolve);
+        }));
+      }
+      loadFile('usergroup.json')
+      loadFile('database.json')
+      Promise.all(promises)
+        .then(dataLoaded);
+
+      function dataLoaded(data) {
+        var ug = data[0];
+        var db = data[1];
+
+        //parse data
+        var groups = getGroups(ug);
+        var stackedEstimates = organizeData(groups, db);
+
+        // UI
+        setUpUI(groups, db);
+
+        // populate bar graph with data
+        initBarGraph(graphElement);
+        updateBarGraph(stackedEstimates);
+      }
+
+      function organizeData(allGroups, allTasks) {
+        var data = filterAgainstParams(allGroups, allTasks, filterParams);
+        data = getTodos(data, allGroups);
+        // don't show filtered out groups
+        data = data.filter(function(group) { return filterParams["Group"].indexOf(group.who) != -1; });
+        data = stackData(data);
+        return data;
+      }
+
+    </script>
+  </body>
+
+</html>

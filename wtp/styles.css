@@ -1,0 +1,49 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+  
+.container {
+  text-align: center;
+}
+  
+.filterOptions {
+  margin-top: 10px;
+  padding: 10px;
+  height: 50px;
+}
+.filterOptions > div {
+  display: inline-block;
+}
+
+.filterOptions button {
+  width: 100px;
+  background-color: white;
+}
+.filterOptions .displayingDD {
+  background-color: lightgray;
+}
+#clearFilters {
+  margin-right: 20px;
+}
+.dropdown {
+  border: 1px solid black;
+  text-align: left;
+  background-color: white;
+  font-family: sans-serif;
+  font-size: .7em;
+  position: absolute;
+  padding: 5px;
+}
+.dropdown span {
+  margin-left: 3px;
+  cursor: default;
+}
+
+#graph {
+  height: 500px;
+}
+.tick line {
+  stroke-dasharray: 2 2 ;
+  stroke: #ccc;
+}
