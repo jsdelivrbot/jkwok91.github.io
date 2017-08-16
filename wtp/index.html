@@ -3,8 +3,12 @@
 
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title>Task Estimate Graph</title>
     <link href="styles.css" type="text/css" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.min.js"></script>
+    
   </head>
 
   <body>
@@ -33,6 +37,9 @@
     <script src="createUI.js"></script>
     <script src="createChart.js"></script>
     <script>
+      'use strict';
+    
+      ES6Promise.polyfill();
 
       var graphElement = "#graph";
 
@@ -71,6 +78,7 @@
         data = stackData(data);
         return data;
       }
+      
 
     </script>
   </body>
